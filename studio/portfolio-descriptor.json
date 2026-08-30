@@ -1,0 +1,48 @@
+{
+  "authority": {
+    "allowed_action_authority": "none",
+    "machine_protection_final_veto": true,
+    "spo_actionable": false,
+    "spo_semantic_mode": "review_only"
+  },
+  "capabilities": [],
+  "configurations": [
+    "dense_plasma_focus"
+  ],
+  "confinement_family": "self_magnetic",
+  "control_adapter": {
+    "contract_version": "0.1.0-spec",
+    "identifier": "scpn-dense-plasma-focus-core.control-adapter"
+  },
+  "device_family": "dense_plasma_focus",
+  "evidence_maturity": "architecture_only",
+  "lifecycle": {
+    "reason": "architecture_only: no implemented capability exists to federate",
+    "state": "not_federated"
+  },
+  "non_claims": [
+    "not machine-ready",
+    "not safety-certified",
+    "not autonomous-plant-ready",
+    "not commercially reactor-ready",
+    "no implemented solver, controller, benchmark, dataset, or deployable artefact",
+    "no experimental correlation"
+  ],
+  "project": "SCPN-DENSE-PLASMA-FOCUS-CORE",
+  "research_group": {
+    "coordination_identity": "SCPN-REACTOR-SYSTEMS",
+    "display_name": "SCPN Reactor Systems Research Group"
+  },
+  "schema": "scpn.studio-portfolio-descriptor.v1",
+  "schema_version": "1.0.0",
+  "source": {
+    "manifest_path": "reactor-domain.json",
+    "manifest_schema": "scpn.reactor-domain.v1",
+    "manifest_schema_version": "1.0.0",
+    "manifest_sha256": "03ab8284c502b02c868e881240df91326d47770c7864755c8811dbb4ddcdee9f"
+  },
+  "spo_registry": {
+    "digest_sha256": "786d9542ce76c56dd7748fa948b17efed6c073525e527ce90e6d5e29a2d00090",
+    "version": "1.0.0"
+  }
+}
