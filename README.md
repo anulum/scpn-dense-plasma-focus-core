@@ -17,12 +17,16 @@ configuration of the SCPN Phase Orchestrator reactor registry (coaxial
 plasma-focus pinch).
 
 **Evidence maturity: `computational_prototype`** (per-capability; ADR 0002).
-One capability is implemented: the device configuration model — validated
-parameter objects with documented consistency estimates, canonical
-serialisation, and a data-only SPO registry pin (`src/scpn_dense_plasma_focus_core/`,
-evidence: `VALIDATION.md#device-configuration-model`). No parameter set
-describes any real machine; the claim inventory is empty and verified by
-the domain validator.
+Two capabilities are implemented: the device configuration model —
+validated parameter objects with documented consistency estimates,
+canonical serialisation, and a data-only SPO registry pin
+(evidence: `VALIDATION.md#device-configuration-model`) — and the
+diagnostic and clock semantics model — synthetic channel and clock
+declarations aligned fail-closed with the pinned SPO observability
+catalogue (ADR 0003, evidence:
+`VALIDATION.md#diagnostic-and-clock-semantics`). No parameter set or
+channel describes any real machine or diagnostic; the claim inventory
+is empty and verified by the domain validator.
 
 ## Scope
 

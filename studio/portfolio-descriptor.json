@@ -10,6 +10,11 @@
       "evidence_maturity": "computational_prototype",
       "evidence_pointer": "VALIDATION.md#device-configuration-model",
       "identifier": "device_configuration_model"
+    },
+    {
+      "evidence_maturity": "computational_prototype",
+      "evidence_pointer": "VALIDATION.md#diagnostic-and-clock-semantics",
+      "identifier": "diagnostic_clock_semantics"
     }
   ],
   "configurations": [
@@ -51,7 +56,7 @@
     "manifest_path": "reactor-domain.json",
     "manifest_schema": "scpn.reactor-domain.v1",
     "manifest_schema_version": "1.0.0",
-    "manifest_sha256": "f8fe74c69d018e4ed628d3b55db688df6a01501731baa4bc5417d9b2c94ebd6b",
+    "manifest_sha256": "d872b68fad10d71cf7a43277446231e41b5a6a46f57939a84b7bd193a96aee8a",
     "repository": "SCPN-DENSE-PLASMA-FOCUS-CORE"
   },
   "spo_registry": {
