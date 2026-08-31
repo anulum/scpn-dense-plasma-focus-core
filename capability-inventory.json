@@ -1,13 +1,19 @@
 {
-  "capabilities": [],
+  "capabilities": [
+    {
+      "evidence_maturity": "computational_prototype",
+      "evidence_pointer": "VALIDATION.md#device-configuration-model",
+      "identifier": "device_configuration_model"
+    }
+  ],
   "claims": [],
-  "evidence_maturity": "architecture_only",
-  "implemented_capability_count": 0,
+  "evidence_maturity": "computational_prototype",
+  "implemented_capability_count": 1,
   "project": "SCPN-DENSE-PLASMA-FOCUS-CORE",
   "schema": "scpn.capability-inventory.v1",
   "schema_version": "1.0.0",
   "source": {
     "manifest_path": "reactor-domain.json",
-    "manifest_sha256": "03ab8284c502b02c868e881240df91326d47770c7864755c8811dbb4ddcdee9f"
+    "manifest_sha256": "f8fe74c69d018e4ed628d3b55db688df6a01501731baa4bc5417d9b2c94ebd6b"
   }
 }

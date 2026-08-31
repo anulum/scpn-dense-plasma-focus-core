@@ -5,7 +5,13 @@
     "spo_actionable": false,
     "spo_semantic_mode": "review_only"
   },
-  "capabilities": [],
+  "capabilities": [
+    {
+      "evidence_maturity": "computational_prototype",
+      "evidence_pointer": "VALIDATION.md#device-configuration-model",
+      "identifier": "device_configuration_model"
+    }
+  ],
   "configurations": [
     "dense_plasma_focus"
   ],
@@ -15,10 +21,10 @@
     "identifier": "scpn-dense-plasma-focus-core.control-adapter"
   },
   "device_family": "dense_plasma_focus",
-  "evidence_maturity": "architecture_only",
+  "evidence_maturity": "computational_prototype",
   "lifecycle": {
     "evidence_pointer": null,
-    "reason": "architecture_only: no implemented capability exists to federate",
+    "reason": "federation gates have not run; capabilities remain repository-local",
     "state": "not_federated"
   },
   "machine_protection": {
@@ -30,8 +36,9 @@
     "not safety-certified",
     "not autonomous-plant-ready",
     "not commercially reactor-ready",
-    "no implemented solver, controller, benchmark, dataset, or deployable artefact",
-    "no experimental correlation"
+    "no implemented solver, controller, benchmark, dataset, or published artefact",
+    "no experimental correlation",
+    "no parameter set describes or validates any real machine"
   ],
   "project": "SCPN-DENSE-PLASMA-FOCUS-CORE",
   "research_group": {
@@ -44,7 +51,7 @@
     "manifest_path": "reactor-domain.json",
     "manifest_schema": "scpn.reactor-domain.v1",
     "manifest_schema_version": "1.0.0",
-    "manifest_sha256": "03ab8284c502b02c868e881240df91326d47770c7864755c8811dbb4ddcdee9f",
+    "manifest_sha256": "f8fe74c69d018e4ed628d3b55db688df6a01501731baa4bc5417d9b2c94ebd6b",
     "repository": "SCPN-DENSE-PLASMA-FOCUS-CORE"
   },
   "spo_registry": {
