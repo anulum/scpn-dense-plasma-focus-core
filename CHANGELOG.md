@@ -14,6 +14,10 @@ SCPN Dense Plasma Focus Core — CHANGELOG
 
 ### Added
 
+- Generated repository header artwork: `docs/assets/generate_header.py`
+  renders three deterministic 1280x640 images from the repository's own
+  domain surface (the coaxial device view used by the README, the
+  three discharge phases, and the drive-parameter window).
 - Modular hosted-workflow surface per the ecosystem workflow-modularity
   standard: `ci.yml` reduced to a coordinator with a stable fail-closed
   `gate` job, single-responsibility reusable workflows for static

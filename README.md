@@ -8,6 +8,11 @@ Contact: www.anulum.li | protoscience@anulum.li
 SCPN Dense Plasma Focus Core — README
 -->
 
+<div align="center">
+  <img src="docs/assets/repo_header.png"
+       alt="SCPN Dense Plasma Focus Core — Coaxial Drive, Focused Pinch">
+</div>
+
 # SCPN Dense Plasma Focus Core
 
 Governed device-family repository for dense-plasma-focus (DPF) fusion
