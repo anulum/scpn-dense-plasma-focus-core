@@ -8,11 +8,12 @@
 
 """Device capability models of the SCPN dense-plasma-focus family.
 
-Public surface of the ``device_configuration_model`` and
-``diagnostic_clock_semantics`` capabilities at
-``computational_prototype`` maturity: validated parameter objects,
+Public surface of the ``device_configuration_model``,
+``diagnostic_clock_semantics`` and ``level0_device_physics`` capabilities
+at ``computational_prototype`` maturity: validated parameter objects,
 synthetic diagnostic and clock declarations aligned with the pinned SPO
-observability catalogue, documented consistency estimates, canonical
+observability catalogue, the closed forms of the Lee model evaluated on
+the validated configuration, documented consistency estimates, canonical
 serialisation with SHA-256 digests, and data-only pins to the SPO
 registries. No claim about any real machine or diagnostic is made
 anywhere in this package.
@@ -34,6 +35,7 @@ from scpn_dense_plasma_focus_core.configuration import (
 from scpn_dense_plasma_focus_core.errors import (
     DeviceConfigurationError,
     DiagnosticPlanError,
+    NumericsError,
 )
 from scpn_dense_plasma_focus_core.observability import (
     APPLICABLE_CANDIDATES,
@@ -54,6 +56,15 @@ from scpn_dense_plasma_focus_core.observability import (
     plan_from_record,
 )
 from scpn_dense_plasma_focus_core.parameters import BankAndFill, ElectrodeSet
+from scpn_dense_plasma_focus_core.physics import (
+    LEVEL0_NON_CLAIMS,
+    LEVEL0_SCHEMA,
+    LEVEL0_SCHEMA_VERSION,
+    Level0PhysicsRecord,
+    ModelInputs,
+    PinchState,
+    level0_physics,
+)
 from scpn_dense_plasma_focus_core.plan_envelope import (
     PlanEnvelope,
     envelope_for_plan,
@@ -68,6 +79,9 @@ __all__ = [
     "APPLICABLE_CANDIDATES",
     "CATALOGUE_BINDING",
     "DEUTERIUM_DRIVE_WINDOW",
+    "LEVEL0_NON_CLAIMS",
+    "LEVEL0_SCHEMA",
+    "LEVEL0_SCHEMA_VERSION",
     "OWNED_CONFIGURATIONS",
     "BankAndFill",
     "CandidateProfile",
@@ -83,8 +97,12 @@ __all__ = [
     "DiagnosticPlanError",
     "ElectrodeSet",
     "FrameKind",
+    "Level0PhysicsRecord",
+    "ModelInputs",
+    "NumericsError",
     "ObservabilityBinding",
     "ObservabilityClass",
+    "PinchState",
     "PlanEnvelope",
     "ReferenceFrame",
     "RegistryBinding",
@@ -95,6 +113,7 @@ __all__ = [
     "envelope_for_plan",
     "envelope_from_bytes",
     "envelope_from_record",
+    "level0_physics",
     "plan_from_bytes",
     "plan_from_record",
     "verify_envelope",

@@ -99,6 +99,96 @@ Bounded claims — what is NOT claimed:
   results; no benchmark, dataset, solver, controller, or experimental
   correlation exists in this repository.
 
+## Level-0 device physics
+
+Evidence record of the `level0_device_physics` capability
+(`computational_prototype`; design record: `docs/adr/0005-level0-device-physics.md`).
+Sources: S. Lee, "Plasma Focus Radiative Model: Review of the Lee Model
+Code", J. Fusion Energ. 33 (2014) 319–335; S. H. Saw and S. Lee,
+"Investigation of Intense Fusion Pulses", in IAEA-TECDOC-1829 (2017)
+pp. 84–86 (Table 1: twelve machines fitted with the code); S. Lee, "The
+Plasma Focus: Scaling Properties to Scaling Laws", ICTP 2168-10 (2012).
+
+What is exercised, all under the 100 % statement-and-branch coverage gate
+(`src/scpn_dense_plasma_focus_core/physics/`):
+
+- **Bank normalisation and fill state** (`bank.py`; Lee eqs. 4–6, 9, 43):
+  `E0`, `t0`, `Z0`, `I0`, the quarter period, `delta`, `ln c`, `La`,
+  `beta`, and the ideal-gas fill. Anchors: the `E0` and `trise` columns of
+  Table 1 for PF1000, NX3, INTI and PF400J within 2.5 % and 2 % (the
+  table's own rounding; the sub-kilojoule row prints one significant
+  digit).
+- **Axial characteristics** (`axial.py`; eqs. 5–7, eq. 1 at rest): the
+  transit time, `alpha`, the characteristic speed and the terminal snowplow
+  speed at a declared current. Anchor: the terminal speed at the peak
+  current against the `peak va` column of the four rows within 15 %; it
+  overestimates every row by 7–14 % and the tests assert that sign, so the
+  deviation is evidence, not noise.
+- **Radial characteristics, slug relations, rule-of-thumb geometry**
+  (`radial.py`; eqs. 14, 15, 24–28, 32, 34; ICTP Tables 2–3): closed forms
+  against their definitions to `1e-14`; the eq. (28) ratio at `c = 3.4`
+  reproduces the printed "typically 2.5" (2.40, 5 %); the tabulated
+  `rmin/a` of NX3 and PF400J and `zmax/a` of NX3 fall inside the ICTP
+  Table 2 spread; sign and scaling identities of the slug relations;
+  `gamma <= 1` and a negative effective charge are refused.
+- **Pinch-phase closed forms** (`pinch.py`; eqs. 39–48): density, Bennett
+  temperature, Spitzer resistance, Joule, bremsstrahlung, line and
+  surface-emission terms against their definitions; both self-absorption
+  branches (a fully absorbed dense column with `A` exactly zero and the
+  surface term; a tenuous column with `A > 1/e` and the scaled volumetric
+  term); `A` monotone in density; `T ∝ I^2`. No printed anchor: the
+  tabulated `Tpinch` and `ni` are outputs of the integrated code and are
+  not reproduced by eqs. (41) and (43) at the tabulated inputs (factors of
+  about 3 and 5 in a hand check), which the record states.
+- **Fast-ion-beam chain** (`beam.py`; TECDOC eqs. 5–6, items (a)–(k)):
+  flux, beam speed, energy flux, power flow, ion current, fluence, energy
+  fluence, ions, beam energy and damage factor against the PF1000, NX3 and
+  INTI columns within 3 % and the PF400J column within 12 % (its two-digit
+  pinch radius enters as `rp^-2`); `J_b ∝ I^2 / sqrt(M Z_eff)`.
+- **Neutron estimates** (`neutron.py`; Lee eq. 50, TECDOC eqs. 1–2): the
+  beam-target closed form with the declared cross-section; the source's
+  own identity between its eq. (1) and eq. (2) reproduced to 1 % (the two
+  printed constants differ by 0.5 %); the empirical scaling law reproduces
+  its stated calibration point (`7e9` at 0.5 MA) within 10 % and is refused
+  outside 0.1–1 MA (the record reports it as not applicable instead).
+- **Vendored transcendental kernel** (`_transcendental.py`): the shared
+  library's own accuracy, exactness, identity and refusal tests run against
+  the copy (logarithm and exponential within `1e-15` relative of the
+  platform `math` module, power within `1e-13`), and the copy names its
+  canonical commit.
+- A composed `Level0PhysicsRecord` (`scpn.dense-plasma-focus-level0-physics.v1`
+  `1.0.0`) with canonical bytes, SHA-256 digest and fixed non-claims, built
+  from the validated configuration, explicit `ModelInputs` and a declared
+  `PinchState`; every input rejects non-positive and non-finite values;
+  three consistency checks (circuit energy within 5 % of the declared bank
+  energy, pinch current not above the peak current, pinch radius inside
+  the anode) refuse inconsistent declarations. The configuration's drive
+  parameter reproduces the `SF` column for PF1000 and NX3 within 1 %; the
+  INTI row is excluded because its printed `SF` does not follow from its
+  own printed inputs.
+- **Native parity**: the Rust crate in `rust/` mirrors every kernel with
+  identical operation order; `tests/test_physics_native_parity.py`
+  compares float64 bit patterns of every field of every model on the four
+  anchor rows and on both self-absorption branches, plus the refusal paths.
+- **Benchmark**: `benchmarks/level0_physics.py` per the ecosystem
+  benchmark standard; results in `docs/benchmarks.md` and the committed
+  local artefact `benchmarks/results/level0_physics.local.json`.
+
+Bounded claims — what is NOT claimed:
+
+- Every number is a closed-form evaluation of published relations on a
+  synthetic configuration and a declared pinch state; no phase of the Lee
+  model is integrated, no shot is simulated, no current waveform is fitted.
+- The anchors reproduce numbers printed in the sources, which are
+  themselves outputs of the source's fitted code; they are not correlations
+  with experimental data.
+- No yield, gain, reactivity, confinement or breakeven statement is made;
+  the beam-target and scaling-law values are consistency instruments at
+  the declared inputs, and the thermonuclear term is not implemented.
+- No value describes, approximates or validates any real machine; the
+  benchmark measures per-point evaluation cost of two implementations of
+  the same closed forms.
+
 ## Diagnostic and clock semantics
 
 Evidence record of the `diagnostic_clock_semantics` capability

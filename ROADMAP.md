@@ -40,6 +40,20 @@ this repository until it appears in the capability inventory with evidence.
   (discharge event train, neck-mode probe array, synthetic oscillator); `computational_prototype` (ADR 0003,
   `VALIDATION.md#diagnostic-and-clock-semantics`). No ingress is
   declared; the SPO semantic-profile state remains `not_declared`.
+- **Level-0 device physics** (landed 2026-09-02) — the closed forms of
+  the Lee model evaluated on the validated configuration and a declared
+  pinch state: bank normalisation and scaling parameters, fill state,
+  axial and radial characteristic quantities, slug relations, rule-of-thumb
+  pinch geometry, pinch-phase density, Bennett temperature and power
+  terms, the fast-ion-beam chain, beam-target and scaling-law neutron
+  estimates; a canonical `Level0PhysicsRecord`, optional native kernels
+  bit-exact with the Python floor, and a standard-conformant benchmark;
+  `computational_prototype` (ADR 0005,
+  `VALIDATION.md#level-0-device-physics`). Follow-ups under the same
+  capability: the five-phase integration (level 1) once the shared
+  integrator kernels exist, the thermonuclear term once the reactivity
+  kernel exists, the corona-model charge state, and the family's 3D model
+  once the shared kernel library is pinned.
 
 ## Planned (no implementation exists; ordering is not a commitment)
 1. **Safety-envelope declaration** — machine-readable operational envelope

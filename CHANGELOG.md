@@ -14,6 +14,32 @@ SCPN Dense Plasma Focus Core — CHANGELOG
 
 ### Added
 
+- Level-0 device physics (`src/scpn_dense_plasma_focus_core/physics/`), the
+  third implemented capability at `computational_prototype` (ADR 0005):
+  the closed forms of the Lee model (Lee 2014; Saw and Lee in
+  IAEA-TECDOC-1829; Lee, ICTP 2012) — bank normalisation and scaling
+  parameters, fill state, axial and radial characteristic quantities, slug
+  relations, rule-of-thumb pinch geometry, pinch-phase density, Bennett
+  temperature and power terms with both self-absorption branches, the
+  fast-ion-beam chain, beam-target and scaling-law neutron estimates — with
+  a canonical `Level0PhysicsRecord`, explicit `ModelInputs` and a declared
+  `PinchState`, anchored to the printed table of twelve fitted machines with
+  declared tolerances and three recorded source inconsistencies. A vendored
+  byte-identical copy of the shared kernel library's deterministic
+  logarithm, exponential and power (canonical: SCPN-REACTOR-KERNELS
+  `799d44d3`) keeps the bit-exact rule; native kernels (`rust/`, crate
+  `scpn-dense-plasma-focus-rs`, optional distribution
+  `scpn-dense-plasma-focus-native`) reproduce every value bit for bit,
+  proven by parity tests; a standard-conformant benchmark
+  (`benchmarks/level0_physics.py`) with a committed local artefact and
+  `docs/benchmarks.md`. The manifest declares the capability and the owned
+  domain `analytic_device_physics_models`; descriptor and inventory
+  regenerated; the envelope fixture regenerated for the new
+  `manifest_sha256` (plan bytes unchanged). Gates extended: `mypy` scope
+  includes `benchmarks/` and `make typecheck` now covers `src/`, a `rust`
+  CI job runs the crate gates, parity and a benchmark smoke, `make rust`
+  locally.
+
 - Diagnostic-plan depth: per-channel signal inventories, frame
   transformations with a fixed kind-admissibility table and connectivity
   rule, and a clock topology partitioning the physical clocks into rooted

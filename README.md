@@ -22,21 +22,32 @@ configuration of the SCPN Phase Orchestrator reactor registry (coaxial
 plasma-focus pinch).
 
 **Evidence maturity: `computational_prototype`** (per-capability; ADR 0002).
-Two capabilities are implemented: the device configuration model —
+Three capabilities are implemented: the device configuration model —
 validated parameter objects with documented consistency estimates,
 canonical serialisation, and a data-only SPO registry pin
-(evidence: `VALIDATION.md#device-configuration-model`) — and the
+(evidence: `VALIDATION.md#device-configuration-model`); the
 diagnostic and clock semantics model — synthetic channel and clock
 declarations aligned fail-closed with the pinned SPO observability
 catalogue (ADR 0003, evidence:
-`VALIDATION.md#diagnostic-and-clock-semantics`). No parameter set or
-channel describes any real machine or diagnostic; the claim inventory
-is empty and verified by the domain validator.
+`VALIDATION.md#diagnostic-and-clock-semantics`); and the level-0 device
+physics — the closed forms of the Lee model (bank normalisation and
+scaling parameters, axial and radial characteristic quantities, slug
+relations, pinch-phase power terms, the fast-ion-beam chain, beam-target
+and scaling-law neutron estimates) evaluated on the validated
+configuration and a declared pinch state, anchored to the printed table
+of twelve fitted machines, with optional native kernels proven bit-exact
+against the Python floor (ADR 0005, evidence:
+`VALIDATION.md#level-0-device-physics`). No parameter set or channel
+describes any real machine or diagnostic; the claim inventory is empty
+and verified by the domain validator.
 
 ## Scope
 
 This repository owns, for the dense-plasma-focus device family:
 
+- the analytic device physics models: closed-form and 0-D models from the
+  plasma-focus literature evaluated on the validated configuration (no
+  solver code, no phase integration, no FUSION seam);
 - the device boundary: plant and experiment truth, shot lifecycle, and
   configuration policy for coaxial-electrode devices whose discharge
   lifts a current sheath over an insulator, accelerates it down the
@@ -79,8 +90,10 @@ This repository owns, for the dense-plasma-focus device family:
 
 This repository is not machine-ready, not safety-certified, and not
 reactor-ready. It contains no implemented solver, no controller, no
-benchmark result, no experimental correlation, no dataset, and no published
-artefact, and no parameter set describes or validates any real machine. Electrode-geometry, fill-gas, and repetition-rate
+experimental correlation, no dataset, and no published artefact; the
+level-0 closed forms of the Lee model and their timing benchmark are
+computational prototypes, not validated performance or yield claims, and
+no parameter set describes or validates any real machine. Electrode-geometry, fill-gas, and repetition-rate
 choices are configuration facets, not separate claims. No capability has reached any
 evidence-maturity state beyond `computational_prototype`.
 
@@ -101,9 +114,10 @@ Every gate currently active in this repository is listed in
 
 ```bash
 make lint        # ruff check + ruff format --check
-make typecheck   # mypy --strict tools tests
-make test        # pytest with 100 % statement and branch coverage on tools/
+make typecheck   # mypy --strict src tools tests benchmarks
+make test        # pytest with 100 % statement and branch coverage
 make validate    # domain manifest, descriptor, and inventory checks
+make rust        # native crate: fmt, clippy (warnings denied), tests
 make preflight   # the full fail-closed gate sequence
 ```
 

@@ -25,3 +25,7 @@ class DiagnosticPlanError(ValueError):
     Every rejection carries the offending field and the violated bound in
     its message; nothing is clamped or silently corrected.
     """
+
+
+class NumericsError(DeviceConfigurationError):
+    """Raised when a vendored numerical kernel input leaves its admissible range."""

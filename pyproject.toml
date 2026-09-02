@@ -53,11 +53,16 @@ select = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-# assert is the pytest contract surface
-"tests/*" = ["S101"]
+# assert is the pytest contract surface; the accuracy sweeps of the vendored
+# transcendental kernel use seeded standard pseudo-random grids
+# (deterministic, not cryptographic)
+"tests/*" = ["S101", "S311"]
 # preflight executes fixed argument vectors of repository gates without a
 # shell and without untrusted input (scope of S603/S607)
 "tools/preflight.py" = ["S603", "S607"]
+# the benchmark records the commit with a fixed git argument vector resolved
+# through shutil.which, without a shell and without untrusted input
+"benchmarks/level0_physics.py" = ["S603"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
@@ -71,6 +76,7 @@ known-first-party = [
     "derive_studio_descriptor",
     "generate_capability_inventory",
     "preflight",
+    "physics_fixtures",
 ]
 
 [tool.mypy]
@@ -78,7 +84,7 @@ strict = true
 python_version = "3.12"
 warn_unreachable = true
 pretty = true
-mypy_path = ["tools", "src"]
+mypy_path = ["tools", "src", "tests"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

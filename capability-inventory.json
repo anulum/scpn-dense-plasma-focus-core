@@ -9,16 +9,21 @@
       "evidence_maturity": "computational_prototype",
       "evidence_pointer": "VALIDATION.md#diagnostic-and-clock-semantics",
       "identifier": "diagnostic_clock_semantics"
+    },
+    {
+      "evidence_maturity": "computational_prototype",
+      "evidence_pointer": "VALIDATION.md#level-0-device-physics",
+      "identifier": "level0_device_physics"
     }
   ],
   "claims": [],
   "evidence_maturity": "computational_prototype",
-  "implemented_capability_count": 2,
+  "implemented_capability_count": 3,
   "project": "SCPN-DENSE-PLASMA-FOCUS-CORE",
   "schema": "scpn.capability-inventory.v1",
   "schema_version": "1.0.0",
   "source": {
     "manifest_path": "reactor-domain.json",
-    "manifest_sha256": "d872b68fad10d71cf7a43277446231e41b5a6a46f57939a84b7bd193a96aee8a"
+    "manifest_sha256": "87148ecd40aabca20d1483bb5dae216fc6431b3bebd284c878510546f1367bf2"
   }
 }
