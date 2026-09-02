@@ -16,10 +16,13 @@
 
 use std::fmt;
 
-use crate::transcendental::{exponential, natural_log, power, NumericsError, EXP_MIN};
+use crate::NumericsError;
 use crate::{
     BOLTZMANN_J_PER_K, ELEMENTARY_CHARGE_C, INV_E, MOLAR_GAS_CONSTANT_J_PER_KMOL_K, MU0,
     PASCAL_PER_TORR, PI, PROTON_MASS_KG,
+};
+use scpn_reactor_kernels_native::numerics::transcendental::{
+    exponential, natural_log, power, EXP_MIN,
 };
 
 /// Reflected-shock speed as a fraction of the on-axis shock speed (eq. 34).

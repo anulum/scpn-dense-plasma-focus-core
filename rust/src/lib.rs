@@ -12,13 +12,16 @@
 //! floor in `scpn_dense_plasma_focus_core.physics` with the identical
 //! operation order, so the IEEE-754 double results agree bit for bit. The
 //! kernels use only `+`, `-`, `*`, `/` and `sqrt` (all correctly rounded)
-//! plus the vendored deterministic logarithm, exponential and power of
-//! [`transcendental`]; no `libm` transcendental is called on either side.
+//! plus the vendored deterministic logarithm, exponential and power of the
+//! shared kernel library crate (`scpn-reactor-kernels-rs`, pinned by
+//! commit in `Cargo.toml` and in the manifest, ADR 0006); no `libm`
+//! transcendental is called on either side.
 //! Nothing here integrates an equation and no value describes a real
 //! machine; the design record is ADR 0005 of the repository.
 
 pub mod physics;
-pub mod transcendental;
+
+pub use scpn_reactor_kernels_native::numerics::transcendental::NumericsError;
 
 /// Vacuum permeability `mu0 = 4e-7 pi`, evaluated as the Python floor does.
 pub const MU0: f64 = 4.0e-7 * std::f64::consts::PI;

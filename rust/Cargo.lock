@@ -106,7 +106,13 @@ name = "scpn-dense-plasma-focus-rs"
 version = "0.1.0"
 dependencies = [
  "pyo3",
+ "scpn-reactor-kernels-rs",
 ]
+
+[[package]]
+name = "scpn-reactor-kernels-rs"
+version = "0.1.0"
+source = "git+https://github.com/anulum/scpn-reactor-kernels.git?rev=6f574bfdddadf24c6a4c0a020c0a257fec38231a#6f574bfdddadf24c6a4c0a020c0a257fec38231a"
 
 [[package]]
 name = "syn"

@@ -24,6 +24,6 @@
   "schema_version": "1.0.0",
   "source": {
     "manifest_path": "reactor-domain.json",
-    "manifest_sha256": "87148ecd40aabca20d1483bb5dae216fc6431b3bebd284c878510546f1367bf2"
+    "manifest_sha256": "646de6f0203ae628d0aba12a45880b55eda843b8788a18af525a2d3486762a7a"
   }
 }

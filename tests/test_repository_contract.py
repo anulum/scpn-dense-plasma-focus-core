@@ -74,9 +74,9 @@ REQUIRED_PATHS = (
     "rust/pyproject.toml",
     "rust/src/lib.rs",
     "rust/src/physics.rs",
-    "rust/src/transcendental.rs",
     "src/scpn_dense_plasma_focus_core/physics/__init__.py",
-    "src/scpn_dense_plasma_focus_core/physics/_transcendental.py",
+    "src/scpn_dense_plasma_focus_core/physics/numerics.py",
+    "docs/adr/0006-shared-numerics-kernels.md",
     "src/scpn_dense_plasma_focus_core/physics/constants.py",
     "src/scpn_dense_plasma_focus_core/physics/bank.py",
     "src/scpn_dense_plasma_focus_core/physics/axial.py",
@@ -218,3 +218,38 @@ def test_package_agrees_with_manifest_truth() -> None:
 def test_typed_package_marker_exists() -> None:
     """The PEP 561 marker is present (empty by design, so no size check)."""
     assert (REPO / "src" / "scpn_dense_plasma_focus_core" / "py.typed").is_file()
+
+
+def test_kernel_library_pin_agrees_with_the_dependency_the_crate_and_the_package() -> (
+    None
+):
+    """One commit, one version, one inventory digest: manifest, pyproject, Cargo, CI."""
+    import tomllib
+
+    import scpn_reactor_kernels
+
+    manifest = load_json_object(REPO / "reactor-domain.json")
+    pin = manifest["kernel_library"]
+    assert pin["distribution"] == "scpn-reactor-kernels"
+    assert pin["kernels"] == ["numerics_transcendental"]
+    project = tomllib.loads((REPO / "pyproject.toml").read_text(encoding="utf-8"))
+    assert project["project"]["dependencies"] == [
+        "scpn-reactor-kernels @ git+https://github.com/anulum/"
+        f"scpn-reactor-kernels.git@{pin['source_commit']}"
+    ]
+    assert scpn_reactor_kernels.__version__ == pin["version"]
+    cargo = tomllib.loads((REPO / "rust" / "Cargo.toml").read_text(encoding="utf-8"))
+    crate = cargo["dependencies"]["scpn-reactor-kernels-rs"]
+    assert crate["git"] == "https://github.com/anulum/scpn-reactor-kernels.git"
+    assert crate["rev"] == pin["source_commit"]
+    lock = (REPO / "rust" / "Cargo.lock").read_text(encoding="utf-8")
+    assert f"#{pin['source_commit']}" in lock
+    workflows = REPO / ".github" / "workflows"
+    for name in ("reusable-static-policy.yml", "reusable-tests.yml", "pre-commit.yml"):
+        assert "pip install -e ." in (workflows / name).read_text(encoding="utf-8"), (
+            name
+        )
+    assert {
+        "domain": "shared_physics_geometry_and_numerics_kernels",
+        "owner": "SCPN-REACTOR-KERNELS",
+    } in manifest["excluded_domains"]

@@ -31,7 +31,7 @@ from typing import Any, Final
 
 from scpn_dense_plasma_focus_core.errors import DeviceConfigurationError
 from scpn_dense_plasma_focus_core.parameters import require_positive
-from scpn_dense_plasma_focus_core.physics._transcendental import natural_log, power
+from scpn_dense_plasma_focus_core.physics.numerics import natural_log, power
 
 #: Beam-target constant of TECDOC-1829 eq. (1), SI units.
 BEAM_TARGET_CONSTANT: Final = 8.54e8

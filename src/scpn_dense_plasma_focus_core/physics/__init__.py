@@ -20,11 +20,6 @@ and no value describes a real machine. Design record: ADR 0005.
 
 from __future__ import annotations
 
-from scpn_dense_plasma_focus_core.physics._transcendental import (
-    exponential,
-    natural_log,
-    power,
-)
 from scpn_dense_plasma_focus_core.physics.axial import (
     AxialCharacteristics,
     axial_characteristics,
@@ -66,6 +61,11 @@ from scpn_dense_plasma_focus_core.physics.neutron import (
     beam_target_yield,
     scaling_law_applies,
     scaling_law_yield,
+)
+from scpn_dense_plasma_focus_core.physics.numerics import (
+    exponential,
+    natural_log,
+    power,
 )
 from scpn_dense_plasma_focus_core.physics.pinch import (
     PinchRadiation,

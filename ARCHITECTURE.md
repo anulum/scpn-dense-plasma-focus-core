@@ -15,8 +15,9 @@ dense-plasma-focus systems inside the SCPN Reactor Systems Research Group.
 The repository holds three implemented capabilities at
 `computational_prototype` — the device configuration model (ADR 0002),
 the diagnostic and clock semantics model (ADR 0003) and the level-0
-device physics (ADR 0005; the closed forms of the Lee model with optional
-native kernels in `rust/`), all in `src/scpn_dense_plasma_focus_core/` —
+device physics (ADR 0005; the closed forms of the Lee model on the pinned
+shared numerics kernels, ADR 0006, with optional native kernels in
+`rust/`), all in `src/scpn_dense_plasma_focus_core/` —
 alongside the device boundary, its ecosystem contracts, and the validation
 tooling that enforces them.
 

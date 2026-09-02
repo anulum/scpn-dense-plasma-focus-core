@@ -151,11 +151,18 @@ What is exercised, all under the 100 % statement-and-branch coverage gate
   printed constants differ by 0.5 %); the empirical scaling law reproduces
   its stated calibration point (`7e9` at 0.5 MA) within 10 % and is refused
   outside 0.1–1 MA (the record reports it as not applicable instead).
-- **Vendored transcendental kernel** (`_transcendental.py`): the shared
-  library's own accuracy, exactness, identity and refusal tests run against
-  the copy (logarithm and exponential within `1e-15` relative of the
-  platform `math` module, power within `1e-13`), and the copy names its
-  canonical commit.
+- **Numerics substrate** (`numerics.py`; ADR 0006): the natural logarithm,
+  the exponential and the real power are the pinned shared kernel library's
+  (`scpn-reactor-kernels`, kernel `numerics_transcendental`; commit and
+  inventory digest in `reactor-domain.json`, `kernel_library`); tests prove
+  each wrapper returns the library value bit for bit and re-raises the
+  library's domain refusal as `NumericsError`; the library's accuracy
+  evidence (logarithm and exponential within `1e-15` relative of the
+  platform `math` module, power within `1e-13`) is the library's own. The
+  manifest block is validated field by field and a contract test proves
+  the manifest, the `pyproject.toml` dependency, the installed library
+  version, `rust/Cargo.toml`, `rust/Cargo.lock` and the CI install steps
+  name one commit.
 - A composed `Level0PhysicsRecord` (`scpn.dense-plasma-focus-level0-physics.v1`
   `1.0.0`) with canonical bytes, SHA-256 digest and fixed non-claims, built
   from the validated configuration, explicit `ModelInputs` and a declared

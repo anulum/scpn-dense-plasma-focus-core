@@ -53,7 +53,8 @@ this repository until it appears in the capability inventory with evidence.
   capability: the five-phase integration (level 1) once the shared
   integrator kernels exist, the thermonuclear term once the reactivity
   kernel exists, the corona-model charge state, and the family's 3D model
-  once the shared kernel library is pinned.
+  on the shared geometry kernels (the library is pinned since 2026-09-02,
+  ADR 0006).
 
 ## Planned (no implementation exists; ordering is not a commitment)
 1. **Safety-envelope declaration** — machine-readable operational envelope

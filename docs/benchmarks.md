@@ -25,19 +25,19 @@ region. Nothing here is a physics claim.
 
 Artefact: `benchmarks/results/level0_physics.local.json`
 (schema `scpn-dense-plasma-focus-core.level0-physics-benchmark.v1`,
-generated 2026-09-02T10:55:23.472801+00:00, at parent commit `45db7b7d294b`
+generated 2026-09-02T16:00:57.541139+00:00, at parent commit `7fb4af088204`
 with the working tree of the landing commit).
 Host: 11th Gen Intel(R) Core(TM) i5-11600K @ 3.90GHz,
 Linux-7.0.0-30-generic-x86_64-with-glibc2.39, Python 3.12.3; load average at
-start 3.87; cores not isolated (shared workstation, so treat the numbers as
+start 9.21 (other work was running on the host); cores not isolated (shared workstation, so treat the numbers as
 indicative). Parameters: 100000 points, 3 warm-up passes, 20 timed passes.
 
 | Backend | P50 µs/point | P95 µs/point | P99 µs/point | mean µs/point | throughput points/s | status |
 |---|---|---|---|---|---|---|
-| `python_floor` (public API, always available) | 9.573 | 9.790 | 9.851 | 9.579 | 104459 | measured |
-| `rust_native` (optional build: `rust/`, maturin) | 0.594 | 0.613 | 0.619 | 0.594 | 1684289 | measured |
+| `python_floor` (public API, always available) | 11.965 | 14.039 | 14.276 | 12.305 | 83580 | measured |
+| `rust_native` (optional build: `rust/`, maturin; fetches the pinned kernel crate) | 0.762 | 0.889 | 0.922 | 0.768 | 1313051 | measured |
 
-P50 speed-up of the native call-through over the Python floor: 16.1×. The
+P50 speed-up of the native call-through over the Python floor: 15.7×. The
 fast row requires the optional native module and is never the default.
 
 ## Fixed-runner (CI) number

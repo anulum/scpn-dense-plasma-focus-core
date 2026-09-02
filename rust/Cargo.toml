@@ -24,6 +24,10 @@ default = []
 python = ["dep:pyo3"]
 
 [dependencies]
+# The shared kernel library at the commit pinned in reactor-domain.json
+# (kernel_library.source_commit); its vendored logarithm, exponential and
+# power are the same series the Python floor evaluates.
+scpn-reactor-kernels-rs = { git = "https://github.com/anulum/scpn-reactor-kernels.git", rev = "6f574bfdddadf24c6a4c0a020c0a257fec38231a", default-features = false }
 pyo3 = { version = "0.29", features = ["extension-module"], optional = true }
 
 [profile.release]

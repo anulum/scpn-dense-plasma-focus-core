@@ -17,6 +17,13 @@ readme = "README.md"
 requires-python = ">=3.12"
 license = "AGPL-3.0-or-later"
 dynamic = ["version"]
+# The shared kernel library is pinned to one commit object of its public
+# repository (no release exists yet); the same commit and the digest of its
+# kernel inventory are recorded in reactor-domain.json (kernel_library) and
+# a contract test proves the two pins agree.
+dependencies = [
+    "scpn-reactor-kernels @ git+https://github.com/anulum/scpn-reactor-kernels.git@6f574bfdddadf24c6a4c0a020c0a257fec38231a",
+]
 
 [tool.setuptools.dynamic]
 version = { attr = "scpn_dense_plasma_focus_core.__version__" }
@@ -53,10 +60,8 @@ select = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-# assert is the pytest contract surface; the accuracy sweeps of the vendored
-# transcendental kernel use seeded standard pseudo-random grids
-# (deterministic, not cryptographic)
-"tests/*" = ["S101", "S311"]
+# assert is the pytest contract surface
+"tests/*" = ["S101"]
 # preflight executes fixed argument vectors of repository gates without a
 # shell and without untrusted input (scope of S603/S607)
 "tools/preflight.py" = ["S603", "S607"]

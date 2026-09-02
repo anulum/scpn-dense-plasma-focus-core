@@ -62,11 +62,24 @@
     {
       "domain": "theta_pinch_devices",
       "owner": "SCPN-THETA-PINCH-CORE"
+    },
+    {
+      "domain": "shared_physics_geometry_and_numerics_kernels",
+      "owner": "SCPN-REACTOR-KERNELS"
     }
   ],
   "fusion_solver_seams": {
     "active": [],
     "policy": "Versioned seams from SCPN-FUSION-CORE may be consumed only after the reactor family migration gate proves exact replacement; no solver code is copied into this repository."
+  },
+  "kernel_library": {
+    "distribution": "scpn-reactor-kernels",
+    "inventory_sha256": "b065c46b9f54d478d94be5cfeb61e1300b4ddae47e57f3992a985adfb2cb5dbf",
+    "kernels": [
+      "numerics_transcendental"
+    ],
+    "source_commit": "6f574bfdddadf24c6a4c0a020c0a257fec38231a",
+    "version": "0.1.0.dev0"
   },
   "license": "AGPL-3.0-or-later",
   "machine_protection": {

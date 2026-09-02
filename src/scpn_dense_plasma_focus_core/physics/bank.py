@@ -30,7 +30,6 @@ from typing import Any
 
 from scpn_dense_plasma_focus_core.errors import DeviceConfigurationError
 from scpn_dense_plasma_focus_core.parameters import require_positive
-from scpn_dense_plasma_focus_core.physics._transcendental import natural_log
 from scpn_dense_plasma_focus_core.physics.constants import (
     BOLTZMANN_J_PER_K,
     MU0,
@@ -38,6 +37,7 @@ from scpn_dense_plasma_focus_core.physics.constants import (
     PI,
     PROTON_MASS_KG,
 )
+from scpn_dense_plasma_focus_core.physics.numerics import natural_log
 
 
 @dataclass(frozen=True, slots=True)

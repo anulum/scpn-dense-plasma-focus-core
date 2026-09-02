@@ -35,12 +35,12 @@ from typing import Any, Final
 
 from scpn_dense_plasma_focus_core.errors import DeviceConfigurationError
 from scpn_dense_plasma_focus_core.parameters import require_positive
-from scpn_dense_plasma_focus_core.physics._transcendental import natural_log
 from scpn_dense_plasma_focus_core.physics.constants import (
     ELEMENTARY_CHARGE_C,
     PI,
     PROTON_MASS_KG,
 )
+from scpn_dense_plasma_focus_core.physics.numerics import natural_log
 
 #: Flux coefficient of eq. (6), ``mu0 / (2.83 pi^2 (e m_p)^(1/2))`` as printed.
 FLUX_COEFFICIENT: Final = 2.75e15

@@ -44,17 +44,17 @@ from typing import Any, Final
 
 from scpn_dense_plasma_focus_core.errors import DeviceConfigurationError
 from scpn_dense_plasma_focus_core.parameters import require_positive
-from scpn_dense_plasma_focus_core.physics._transcendental import (
-    EXP_MIN,
-    exponential,
-    natural_log,
-)
 from scpn_dense_plasma_focus_core.physics.constants import (
     BOLTZMANN_J_PER_K,
     ELEMENTARY_CHARGE_C,
     INV_E,
     MU0,
     PI,
+)
+from scpn_dense_plasma_focus_core.physics.numerics import (
+    EXP_MIN,
+    exponential,
+    natural_log,
 )
 
 #: Spitzer resistance coefficient of eq. (40), SI.

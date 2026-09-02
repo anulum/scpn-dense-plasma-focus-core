@@ -12,6 +12,24 @@ SCPN Dense Plasma Focus Core — CHANGELOG
 
 ## [Unreleased]
 
+### Changed
+
+- The temporary byte-identical copy of the shared library's transcendental
+  kernel (`physics/_transcendental.py`, `rust/src/transcendental.rs`) is
+  retired for the pinned library (ADR 0006): `scpn-reactor-kernels` is the
+  one runtime dependency pinned to a commit object in `pyproject.toml`, the
+  manifest records the same commit, the library's kernel-inventory digest
+  and the consumed kernel in the optional `kernel_library` block enforced by
+  the validator, and declares the excluded domain
+  `shared_physics_geometry_and_numerics_kernels`; `physics/numerics.py`
+  re-exports the library kernels and re-raises their refusals as
+  `NumericsError`; the native crate depends on the library's Rust crate at
+  the same commit. No level-0 value changes; the library's own tests no
+  longer run here. CI installs the package with its pinned dependency;
+  descriptor and inventory regenerated; the envelope fixture regenerated for
+  the new `manifest_sha256` (plan bytes unchanged); the benchmark artefact
+  regenerated on the pinned crate.
+
 ### Added
 
 - Level-0 device physics (`src/scpn_dense_plasma_focus_core/physics/`), the
