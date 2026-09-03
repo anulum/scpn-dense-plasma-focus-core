@@ -22,7 +22,7 @@ configuration of the SCPN Phase Orchestrator reactor registry (coaxial
 plasma-focus pinch).
 
 **Evidence maturity: `computational_prototype`** (per-capability; ADR 0002).
-Three capabilities are implemented: the device configuration model —
+Four capabilities are implemented: the device configuration model —
 validated parameter objects with documented consistency estimates,
 canonical serialisation, and a data-only SPO registry pin
 (evidence: `VALIDATION.md#device-configuration-model`); the
@@ -38,7 +38,12 @@ configuration and a declared pinch state, anchored to the printed table
 of twelve fitted machines, evaluated through the pinned shared numerics
 kernels of `scpn-reactor-kernels`, with optional native kernels proven
 bit-exact against the Python floor (ADR 0005 and ADR 0006, evidence:
-`VALIDATION.md#level-0-device-physics`). No parameter set or channel
+`VALIDATION.md#level-0-device-physics`); and the device 3D model — a
+validated mechanical envelope of the Mather-type layout and seven analytic
+bodies tessellated into closed triangle meshes with binary STL and glTF 2.0
+exports, built on the geometry kernels of the same pinned library (ADR 0007,
+evidence: `VALIDATION.md#device-3d-model`, consumer contract:
+`docs/DEVICE_3D_MODEL_CONTRACT.md`). No parameter set, channel or body
 describes any real machine or diagnostic; the claim inventory is empty
 and verified by the domain validator.
 

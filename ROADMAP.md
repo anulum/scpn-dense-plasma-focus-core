@@ -52,9 +52,18 @@ this repository until it appears in the capability inventory with evidence.
   `VALIDATION.md#level-0-device-physics`). Follow-ups under the same
   capability: the five-phase integration (level 1) once the shared
   integrator kernels exist, the thermonuclear term once the reactivity
-  kernel exists, the corona-model charge state, and the family's 3D model
-  on the shared geometry kernels (the library is pinned since 2026-09-02,
-  ADR 0006).
+  kernel exists, and the corona-model charge state.
+- **Device 3D model** (landed 2026-09-03) — a validated mechanical envelope
+  of the Mather-type layout (insulator sleeve, cathode, chamber, closing
+  walls) and the seven analytic bodies tessellated into closed,
+  outward-oriented triangle meshes with a canonical model record and binary
+  STL and glTF 2.0 exports, built on the geometry kernels of the library
+  already pinned for the numerics kernel; parity of every body proven bit
+  for bit against the library's native module and a standard-conformant
+  benchmark; `computational_prototype` (ADR 0007,
+  `VALIDATION.md#device-3d-model`, consumer contract
+  `docs/DEVICE_3D_MODEL_CONTRACT.md`). Follow-up under the same capability:
+  the tier-G2 B-rep model once the group's CAD kernels are public.
 
 ## Planned (no implementation exists; ordering is not a commitment)
 1. **Safety-envelope declaration** — machine-readable operational envelope

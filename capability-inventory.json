@@ -14,16 +14,21 @@
       "evidence_maturity": "computational_prototype",
       "evidence_pointer": "VALIDATION.md#level-0-device-physics",
       "identifier": "level0_device_physics"
+    },
+    {
+      "evidence_maturity": "computational_prototype",
+      "evidence_pointer": "VALIDATION.md#device-3d-model",
+      "identifier": "device_3d_model"
     }
   ],
   "claims": [],
   "evidence_maturity": "computational_prototype",
-  "implemented_capability_count": 3,
+  "implemented_capability_count": 4,
   "project": "SCPN-DENSE-PLASMA-FOCUS-CORE",
   "schema": "scpn.capability-inventory.v1",
   "schema_version": "1.0.0",
   "source": {
     "manifest_path": "reactor-domain.json",
-    "manifest_sha256": "646de6f0203ae628d0aba12a45880b55eda843b8788a18af525a2d3486762a7a"
+    "manifest_sha256": "876d43f87151d2ce804bc0b045521e97e799e7e370e99976f63b0e024cc831f8"
   }
 }

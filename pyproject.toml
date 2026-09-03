@@ -68,6 +68,7 @@ select = [
 # the benchmark records the commit with a fixed git argument vector resolved
 # through shutil.which, without a shell and without untrusted input
 "benchmarks/level0_physics.py" = ["S603"]
+"benchmarks/device_model_3d.py" = ["S603"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
@@ -82,6 +83,7 @@ known-first-party = [
     "generate_capability_inventory",
     "preflight",
     "physics_fixtures",
+    "geometry_fixtures",
 ]
 
 [tool.mypy]

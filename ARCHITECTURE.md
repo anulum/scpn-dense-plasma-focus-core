@@ -12,12 +12,14 @@ SCPN Dense Plasma Focus Core — Architecture summary
 
 `SCPN-DENSE-PLASMA-FOCUS-CORE` is the device-family owner for
 dense-plasma-focus systems inside the SCPN Reactor Systems Research Group.
-The repository holds three implemented capabilities at
+The repository holds four implemented capabilities at
 `computational_prototype` — the device configuration model (ADR 0002),
-the diagnostic and clock semantics model (ADR 0003) and the level-0
+the diagnostic and clock semantics model (ADR 0003), the level-0
 device physics (ADR 0005; the closed forms of the Lee model on the pinned
 shared numerics kernels, ADR 0006, with optional native kernels in
-`rust/`), all in `src/scpn_dense_plasma_focus_core/` —
+`rust/`) and the device 3D model (ADR 0007; analytic bodies tessellated on
+the geometry kernels of the same pinned library), all in
+`src/scpn_dense_plasma_focus_core/` —
 alongside the device boundary, its ecosystem contracts, and the validation
 tooling that enforces them.
 

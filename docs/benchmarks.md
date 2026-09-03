@@ -40,6 +40,32 @@ indicative). Parameters: 100000 points, 3 warm-up passes, 20 timed passes.
 P50 speed-up of the native call-through over the Python floor: 15.7×. The
 fast row requires the optional native module and is never the default.
 
+## Device 3D model tessellation — local workstation (non-isolated)
+
+Artefact: `benchmarks/results/device_model_3d.local.json`
+(schema `scpn-dense-plasma-focus-core.device-model-3d-benchmark.v1`, generated 2026-09-03T10:06:58.426524+00:00, at parent commit
+`bb1bf2914293` with the working tree of the landing commit).
+Host: 11th Gen Intel(R) Core(TM) i5-11600K @ 3.90GHz, Linux-7.0.0-30-generic-x86_64-with-glibc2.39, Python 3.12.3;
+load average at start 3.37; cores not
+isolated (shared workstation, so treat the numbers as indicative).
+Operation: one full device tessellation (seven bodies, 163840 faces at
+4096 segments) followed by the signed volume and surface area of every
+body; 3 warm-up passes, 20 timed passes; time per generated face.
+Both backends are the pinned shared kernel library's. The Python floor row
+includes the library's `TriangleMesh` validation (closure and orientation
+checks) that every public build performs; the native row measures the
+library's native kernels through their bindings without that validation, so
+the ratio compares a validated build against the raw kernel cost.
+
+| Backend | P50 µs/face | P95 µs/face | P99 µs/face | mean µs/face | throughput faces/s | status |
+|---|---|---|---|---|---|---|
+| `python_floor` (public API, always available) | 3.651 | 3.945 | 4.014 | 3.652 | 273883 | measured |
+| `rust_native` (optional build of the pinned library: its `rust/`, maturin) | 0.134 | 0.145 | 0.192 | 0.135 | 7466856 | measured |
+
+P50 speed-up of the native kernels over the validated Python floor:
+27.3×. The fast row requires the optional native module of the pinned
+library and is never the default.
+
 ## Fixed-runner (CI) number
 
 Not yet published: the hosted `rust` job runs a benchmark smoke that
@@ -54,4 +80,13 @@ is the local, non-isolated one above.
 make rust
 VIRTUAL_ENV=.venv PATH=.venv/bin:$PATH maturin develop --release -m rust/Cargo.toml
 .venv/bin/python benchmarks/level0_physics.py --points 100000 --warmup 3 --repeats 20 --label local
+```
+
+The 3D-model rows need the pinned library's native module in addition to
+this repository's crate:
+
+```bash
+.venv/bin/pip install --no-deps --no-build-isolation \
+  "scpn-reactor-kernels-native @ git+https://github.com/anulum/scpn-reactor-kernels.git@6f574bfdddadf24c6a4c0a020c0a257fec38231a#subdirectory=rust"
+.venv/bin/python benchmarks/device_model_3d.py --segments 4096 --warmup 3 --repeats 20 --label local
 ```

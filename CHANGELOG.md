@@ -32,6 +32,30 @@ SCPN Dense Plasma Focus Core — CHANGELOG
 
 ### Added
 
+- Device 3D model (`src/scpn_dense_plasma_focus_core/geometry/`), the fourth
+  implemented capability at `computational_prototype` (ADR 0007, which amends
+  ADR 0006): a validated `DeviceGeometry` of the Mather-type mechanical
+  envelope (insulator-sleeve length and wall, cathode wall and length,
+  chamber bore, wall and length, back-wall and end-wall thickness — the
+  anode radius, cathode radius and anode length stay in the configuration),
+  and a `DeviceModel3D` record (`scpn.dense-plasma-focus-3d-model.v1`)
+  composing seven closed, outward-oriented triangle bodies: anode, insulator
+  sleeve, cathode, chamber wall, back wall, downstream end wall and the
+  declared pinch column standing on the anode tip. The layout follows the
+  documents already on file for the level-0 models; every dimension is
+  synthetic, and the cathode is the model's equivalent coaxial conductor,
+  not the squirrel cage of discrete rods. Binary STL and glTF 2.0 binary
+  exports carry the device provenance in the document `extras`. The manifest
+  block `kernel_library` gains the four geometry kernels at the commit
+  already pinned, the capability and the owned domain
+  `device_geometry_and_3d_model`; descriptor and inventory regenerated; the
+  envelope fixture regenerated for the new `manifest_sha256` (plan bytes
+  unchanged). Every body is proven bit-exact against the library's native
+  module. A standard-conformant benchmark
+  (`benchmarks/device_model_3d.py`) with a committed local artefact and a
+  `docs/benchmarks.md` section; the native CI job additionally builds the
+  library's native module so the geometry parity file never skips.
+
 - Level-0 device physics (`src/scpn_dense_plasma_focus_core/physics/`), the
   third implemented capability at `computational_prototype` (ADR 0005):
   the closed forms of the Lee model (Lee 2014; Saw and Lee in

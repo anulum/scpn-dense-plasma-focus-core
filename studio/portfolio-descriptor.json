@@ -20,6 +20,11 @@
       "evidence_maturity": "computational_prototype",
       "evidence_pointer": "VALIDATION.md#level-0-device-physics",
       "identifier": "level0_device_physics"
+    },
+    {
+      "evidence_maturity": "computational_prototype",
+      "evidence_pointer": "VALIDATION.md#device-3d-model",
+      "identifier": "device_3d_model"
     }
   ],
   "configurations": [
@@ -46,7 +51,7 @@
     "not safety-certified",
     "not autonomous-plant-ready",
     "not commercially reactor-ready",
-    "no implemented solver, controller, dataset, or published artefact; the level-0 closed forms of the Lee model and their timing benchmark are computational prototypes, not validated performance or yield claims",
+    "no implemented solver, controller, dataset, or published artefact; the level-0 closed forms of the Lee model, the analytic-surface device 3D model (composed on the pinned shared geometry kernels) and their timing benchmarks are computational prototypes, not validated performance or yield claims",
     "no experimental correlation",
     "no parameter set describes or validates any real machine"
   ],
@@ -61,7 +66,7 @@
     "manifest_path": "reactor-domain.json",
     "manifest_schema": "scpn.reactor-domain.v1",
     "manifest_schema_version": "1.0.0",
-    "manifest_sha256": "646de6f0203ae628d0aba12a45880b55eda843b8788a18af525a2d3486762a7a",
+    "manifest_sha256": "876d43f87151d2ce804bc0b045521e97e799e7e370e99976f63b0e024cc831f8",
     "repository": "SCPN-DENSE-PLASMA-FOCUS-CORE"
   },
   "spo_registry": {

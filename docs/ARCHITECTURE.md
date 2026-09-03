@@ -15,7 +15,7 @@ SCPN Dense Plasma Focus Core — Architecture
 `SCPN-DENSE-PLASMA-FOCUS-CORE` is the device-family owner for
 dense-plasma-focus systems in the SCPN Reactor Systems Research Group
 portfolio. The
-repository owns three implemented capabilities at
+repository owns four implemented capabilities at
 `computational_prototype` in `src/scpn_dense_plasma_focus_core/`: the device
 configuration model (design record ADR 0002, evidence record
 `VALIDATION.md#device-configuration-model`), the diagnostic and
@@ -23,7 +23,11 @@ clock semantics model (design record ADR 0003, evidence record
 `VALIDATION.md#diagnostic-and-clock-semantics`) and the level-0 device
 physics (design record ADR 0005, evidence record
 `VALIDATION.md#level-0-device-physics`; owned domain
-`analytic_device_physics_models`, disjoint from solver mathematics). Every other
+`analytic_device_physics_models`, disjoint from solver mathematics) and the
+device 3D model (design record ADR 0007, evidence record
+`VALIDATION.md#device-3d-model`; owned domain
+`device_geometry_and_3d_model`, built on the geometry kernels of the pinned
+library). Every other
 section below describes boundaries and contracts. The claim inventory is
 empty; capability and claim inventories are generated and drift-checked.
 
@@ -86,9 +90,11 @@ SCPN-CONTROL ──admitted ControlAction──► independent machine protectio
 |---|---|
 | `reactor-domain.json` | portable source of project identity and contracts |
 | `studio/portfolio-descriptor.json` | derived Studio descriptor, `not_federated` |
-| `capability-inventory.json` | generated inventory of the three implemented capabilities |
+| `capability-inventory.json` | generated inventory of the four implemented capabilities |
 | `src/scpn_dense_plasma_focus_core/physics/` | level-0 device physics (Lee model closed forms, composed record) |
-| `reactor-domain.json` → `kernel_library` | exact pin of `scpn-reactor-kernels` (commit object, kernel-inventory digest, consumed kernel; ADR 0006) |
+| `src/scpn_dense_plasma_focus_core/geometry/` | device geometry and the tier-G1 3D model on the pinned shared kernels |
+| `docs/DEVICE_3D_MODEL_CONTRACT.md` | producer-owned contract of the exported meshes |
+| `reactor-domain.json` → `kernel_library` | exact pin of `scpn-reactor-kernels` (commit object, kernel-inventory digest, consumed kernels; ADR 0006 and ADR 0007) |
 | `rust/` | optional native kernels (`scpn-dense-plasma-focus-rs`, depending on the library's Rust crate at the pinned commit), bit-exact with the Python floor |
 | `benchmarks/` | standard-conformant benchmark and committed local artefact |
 | `docs/CONTROL_ADAPTER_SPECIFICATION.md` | device-owned adapter contract |

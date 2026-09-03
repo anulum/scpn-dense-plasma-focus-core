@@ -299,3 +299,87 @@ gate:
   domain (`clk_facility` root, `clk_shot` member); multi-domain rules
   are exercised by test-constructed plans. Scopes are declarations;
   `mapping_state` stays `unmapped`.
+
+## Device 3D model
+
+Evidence record of the `device_3d_model` capability
+(`computational_prototype`; design record `docs/adr/0007-device-3d-model.md`,
+which amends `docs/adr/0006-shared-numerics-kernels.md`; consumer contract:
+`docs/DEVICE_3D_MODEL_CONTRACT.md`).
+
+The unit circle, the tessellation primitives, the closed-mesh contract and
+the STL/GLB serialisers are consumed from the shared kernel library
+`scpn-reactor-kernels` at the commit this repository already pinned for the
+numerics kernel; their evidence (polynomial accuracy against `libm`, exact
+polygon-prism identities, quadratic convergence, closure and orientation,
+export layouts, native parity) is the library's, at its
+`VALIDATION.md#geometry-kernels`. What this repository exercises, all under
+the coverage gate (`src/scpn_dense_plasma_focus_core/geometry/`):
+
+- **Device geometry** (`DeviceGeometry`): nine SI parameters of the
+  mechanical envelope (insulator-sleeve length and wall, cathode wall and
+  length, chamber bore, wall and length, back-wall and end-wall thickness)
+  with fail-closed positivity, the axial rule that the cathode fits the
+  chamber length, canonical bytes, a SHA-256 digest and a strict parser
+  refusing unknown fields and non-finite literals; every rejection branch is
+  tested. The anode radius, the cathode radius and the anode length stay in
+  the configuration's `ElectrodeSet`. The layout is the qualitative
+  Mather-type arrangement of the documents already on file for the level-0
+  models (IAEA-TECDOC-1829; S. Lee, J. Fusion Energ. 33 (2014) 319); no
+  dimension of any device is used.
+- **Kernel library pin**: the manifest block `kernel_library` now lists the
+  four geometry kernels beside the numerics kernel at the same commit and
+  inventory digest; the contract test proves the manifest, the
+  `pyproject.toml` dependency, the Rust crate revision, the lock file, the
+  installed library version and the CI install steps name one commit.
+- **Device model** (`DeviceModel3D`, `scpn.dense-plasma-focus-3d-model.v1`
+  `1.0.0`): seven bodies in the fixed order with declared roles and
+  materials; the sleeve starts at the anode surface, stays inside the cathode
+  radius and ends before the anode does; the cathode fits the chamber bore;
+  the back wall and the end wall cap the chamber at both ends; the pinch
+  column stands exactly where the anode ends and stays inside the chamber;
+  every body volume converges on its analytic cylinder or tube; refusal of a
+  sleeve that reaches the cathode, a cathode wider than the chamber bore, a
+  sleeve longer than the anode, an anode longer than the chamber, a column
+  not inside the anode radius, a column leaving the chamber, and non-finite
+  or non-positive column dimensions; the fixed body inventory; determinism;
+  canonical bytes with one pinned reference digest (segments = 8).
+- **Exports**: the device-side provenance record (`glb_extras`: schema, both
+  source digests, model digest, pinch radius and length, segment count,
+  units, non-claims) is exactly what the library's GLB carries as document
+  `extras`; the bytes are proven identical to the library serialisers called
+  directly; the binary STL and glTF 2.0 binary layouts are read back with
+  minimal specification-level readers; determinism; the file writers.
+- **Native parity**: `tests/test_geometry_native_parity.py` builds the seven
+  device bodies on the library's Python floor and compares float64 bit
+  patterns of every vertex coordinate, the face index streams, the signed
+  volume and the surface area against the library's native module
+  (`scpn_reactor_kernels_native`); the consumer inherits the library's parity
+  rather than re-proving the kernels. The crate in `rust/` carries physics
+  only and is unchanged by this capability.
+- **Benchmark**: `benchmarks/device_model_3d.py` per the ecosystem benchmark
+  standard, measuring the library's Python floor (through the validated
+  device build) against the library's native kernels; results in
+  `docs/benchmarks.md` and the committed local artefact
+  `benchmarks/results/device_model_3d.local.json`.
+
+Bounded claims — what is NOT claimed:
+
+- The bodies are analytic surfaces of a synthetic design: no B-rep solid, no
+  compression boundary, no engineering model. The plasma body is the declared
+  pinch column of the level-0 models standing on the anode tip, not a
+  computed compression boundary, and it is drawn at one instant, not swept
+  through the phases the model integrates.
+- The cathode is the equivalent coaxial conductor of the model, not the
+  squirrel cage of discrete rods a real assembly carries; rod count, spacing
+  and diameter are not modelled, and neither are insulator end fittings, gas
+  ports, diagnostic windows, the collector plate or supports.
+- No material property, load, field, thermal or neutronic quantity is
+  carried; the material tokens are declarations only.
+- The tessellation is exact only as an inscribed polygonal prism: every
+  volume and area is below the analytic value by the declared deficit, and
+  that deficit is measured, not assumed.
+- No value describes, approximates or validates any real machine; the
+  benchmark measures tessellation cost of two implementations of the same
+  kernels, not physics.
+- Maturity stays `computational_prototype`.
