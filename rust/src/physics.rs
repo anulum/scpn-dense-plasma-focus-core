@@ -84,14 +84,23 @@ impl From<NumericsError> for PhysicsError {
 /// Bank normalisation and scaling parameters (Lee 2014, eqs. 4–6, 9).
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct BankNormalisation {
+    /// `E0 = C0 V0^2 / 2`.
     pub bank_energy_j: f64,
+    /// `t0 = sqrt(L0 C0)`.
     pub characteristic_time_s: f64,
+    /// `Z0 = sqrt(L0 / C0)`.
     pub surge_impedance_ohm: f64,
+    /// `I0 = V0 / Z0`.
     pub characteristic_current_a: f64,
+    /// `(pi / 2) t0`, the current rise time of the undamped circuit.
     pub quarter_period_s: f64,
+    /// `delta = r0 / Z0`.
     pub damping_ratio: f64,
+    /// `ln(c)` with `c = b / a`.
     pub log_radius_ratio: f64,
+    /// `La = (mu0 / 2 pi) ln(c) z0`.
     pub axial_inductance_h: f64,
+    /// `beta = L0 / La`.
     pub inductance_ratio: f64,
 }
 
@@ -141,9 +150,13 @@ pub fn bank_normalisation(
 /// Ideal-gas fill state.
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct FillState {
+    /// Fill pressure in pascals.
     pub pressure_pa: f64,
+    /// `M m_p` for the declared molecular mass number `M`.
     pub molecular_mass_kg: f64,
+    /// `N0 = p / (k_B T0)`.
     pub molecule_density_per_m3: f64,
+    /// `rho0 = N0 M m_p`.
     pub mass_density_kg_m3: f64,
 }
 
@@ -164,9 +177,13 @@ pub fn fill_state(pressure_torr: f64, molecular_mass_amu: f64, temperature_k: f6
 /// Axial-phase characteristic quantities (Lee 2014, eqs. 5–7 and eq. 1 at rest).
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct AxialCharacteristics {
+    /// `ta` of eq. (5).
     pub axial_transit_time_s: f64,
+    /// `t0 / ta` of eq. (6).
     pub alpha: f64,
+    /// `va = z0 / ta` of eq. (7).
     pub characteristic_axial_speed_m_s: f64,
+    /// `v_inf` at the declared current (eq. 1 with zero acceleration).
     pub terminal_sheath_speed_m_s: f64,
 }
 
@@ -207,11 +224,17 @@ pub fn axial_characteristics(
 /// Radial-phase characteristic quantities (Lee 2014, eqs. 24–28).
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct RadialCharacteristics {
+    /// `tr` of eq. (26).
     pub radial_transit_time_s: f64,
+    /// `vr = a / tr` of eq. (27).
     pub characteristic_radial_speed_m_s: f64,
+    /// `ta / tr` of eq. (25).
     pub alpha1: f64,
+    /// `F = z0 / a`.
     pub aspect_ratio: f64,
+    /// `beta / (F ln c)` of eq. (24).
     pub beta1: f64,
+    /// `[(c^2 - 1)(gamma + 1) / (4 ln c)]^(1/2)` of eq. (28).
     pub geometric_speed_ratio: f64,
 }
 
@@ -253,9 +276,13 @@ pub fn radial_characteristics(
 /// Instantaneous slug relations (Lee 2014, eqs. 14, 15, 32, 34).
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct SlugRelations {
+    /// `drs/dt` of eq. (14); negative (inward).
     pub shock_speed_m_s: f64,
+    /// `dzf/dt` of eq. (15); positive.
     pub elongation_speed_m_s: f64,
+    /// `T` of eq. (32) behind the shock.
     pub shock_temperature_k: f64,
+    /// `0.3` of the on-axis shock speed, outward (eq. 34).
     pub reflected_shock_speed_m_s: f64,
 }
 
@@ -294,9 +321,13 @@ pub fn slug_relations(
 /// Rule-of-thumb pinch geometry (ICTP 2168-10, Table 3).
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct PinchGeometryEstimate {
+    /// `0.15 a`.
     pub minimum_radius_m: f64,
+    /// `1.5 a`.
     pub maximum_length_m: f64,
+    /// `5e-6 a` (`a` in metres).
     pub shock_transit_time_s: f64,
+    /// `1e-6 a` (`a` in metres).
     pub pinch_lifetime_s: f64,
 }
 
@@ -314,17 +345,29 @@ pub fn pinch_geometry_estimate(anode_radius_m: f64) -> PinchGeometryEstimate {
 /// Pinch-phase closed forms (Lee 2014, eqs. 39–48).
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct PinchRadiation {
+    /// `N_i` of eq. (43).
     pub ion_density_per_m3: f64,
+    /// `T` of eq. (41).
     pub bennett_temperature_k: f64,
+    /// The same temperature in electronvolts (`k_B T / e`).
     pub temperature_ev: f64,
+    /// `R` of eq. (40).
     pub spitzer_resistance_ohm: f64,
+    /// `R I^2 fc^2` of eq. (39); positive.
     pub joule_power_w: f64,
+    /// Eq. (42); negative.
     pub bremsstrahlung_power_w: f64,
+    /// Eq. (44), volumetric; negative.
     pub line_power_w: f64,
+    /// `M` of eq. (46).
     pub photonic_excitation_number: f64,
+    /// `A` of eq. (47) in `(0, 1]`.
     pub absorption_factor: f64,
+    /// Eq. (48); negative.
     pub surface_line_power_w: f64,
+    /// `A` times the volumetric term while `A > 1/e`, otherwise the surface term.
     pub effective_line_power_w: f64,
+    /// `dQ/dt` of eq. (45) with the effective line term.
     pub net_power_w: f64,
 }
 
@@ -428,17 +471,29 @@ pub fn pinch_radiation(
 /// Fast-ion-beam chain (TECDOC-1829, eqs. 5–6 and items (a)–(k)).
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct FastIonBeam {
+    /// `v_b` of eq. (5).
     pub beam_speed_m_s: f64,
+    /// `J_b` of eq. (6).
     pub flux_per_m2_s: f64,
+    /// `J_b Z_eff e U`.
     pub energy_flux_w_m2: f64,
+    /// Energy flux times the pinch cross-section.
     pub power_flow_w: f64,
+    /// `J_b e Z_eff`.
     pub current_density_a_m2: f64,
+    /// Current density times the pinch cross-section.
     pub ion_current_a: f64,
+    /// `J_b` times the pinch cross-section.
     pub ions_per_s: f64,
+    /// `J_b tau`.
     pub fluence_per_m2: f64,
+    /// Fluence times `Z_eff e U`.
     pub energy_fluence_j_m2: f64,
+    /// Fluence times the pinch cross-section.
     pub ions_in_beam: f64,
+    /// Ions in the beam times `Z_eff e U`.
     pub beam_energy_j: f64,
+    /// `J_b Z_eff e U tau^(1/2)`.
     pub damage_factor_w_m2_sqrt_s: f64,
 }
 

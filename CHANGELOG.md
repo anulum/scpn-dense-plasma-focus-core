@@ -14,6 +14,16 @@ SCPN Dense Plasma Focus Core — CHANGELOG
 
 ### Changed
 
+- Native surface documentation is now a compiler gate, not a habit: the crate
+  denies `missing_docs`, `missing_debug_implementations` and `unsafe_code`, and
+  denies rustdoc's broken and private intra-doc links and invalid Rust code
+  blocks. `cargo doc --no-deps` joins the local `rust` target and the hosted
+  `rust` job. Turning the gate on found fifty-five undocumented public struct
+  fields in `rust/src/physics.rs` — every result field of the eight native
+  record types. Each now carries the description its Python-floor counterpart
+  already carried, so the two surfaces say the same thing about the same
+  quantity. No behaviour changes and no value moves.
+
 - The temporary byte-identical copy of the shared library's transcendental
   kernel (`physics/_transcendental.py`, `rust/src/transcendental.rs`) is
   retired for the pinned library (ADR 0006): `scpn-reactor-kernels` is the
