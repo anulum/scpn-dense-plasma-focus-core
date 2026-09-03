@@ -15,7 +15,15 @@ import json
 
 import pytest
 
-from physics_fixtures import NX3, PF1000, ROWS, configuration, inputs, pinch_state
+from physics_fixtures import (
+    NX3,
+    PF1000,
+    ROWS,
+    AnchorRow,
+    configuration,
+    inputs,
+    pinch_state,
+)
 from scpn_dense_plasma_focus_core import (
     LEVEL0_NON_CLAIMS,
     LEVEL0_SCHEMA,
@@ -71,7 +79,7 @@ def test_record_composes_every_model_and_is_canonical() -> None:
 
 
 @pytest.mark.parametrize("row", ROWS, ids=[row.name for row in ROWS])
-def test_every_anchor_row_builds_a_consistent_record(row) -> None:  # type: ignore[no-untyped-def]
+def test_every_anchor_row_builds_a_consistent_record(row: AnchorRow) -> None:
     """Each Table 1 row passes the consistency checks and wires the models."""
     record = level0_physics(configuration(row), inputs(row), pinch_state(row))
     assert record.axial.drive_current_a == row.peak_current_a
@@ -92,7 +100,7 @@ def test_every_anchor_row_builds_a_consistent_record(row) -> None:  # type: igno
 
 
 @pytest.mark.parametrize("row", [PF1000, NX3], ids=["PF1000", "NX3"])
-def test_drive_parameter_reproduces_the_printed_speed_factor(row) -> None:  # type: ignore[no-untyped-def]
+def test_drive_parameter_reproduces_the_printed_speed_factor(row: AnchorRow) -> None:
     """The configuration's drive parameter matches the table's ``SF`` to 1 %.
 
     The INTI row is excluded on purpose: its printed ``SF`` (102) does not

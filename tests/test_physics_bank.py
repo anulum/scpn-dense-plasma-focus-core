@@ -24,9 +24,10 @@ from scpn_dense_plasma_focus_core.physics import (
     bank_normalisation,
     fill_state,
 )
+from scpn_dense_plasma_focus_core.physics.bank import BankNormalisation
 
 
-def normalisation(row: AnchorRow):  # type: ignore[no-untyped-def]
+def normalisation(row: AnchorRow) -> BankNormalisation:
     """Evaluate the bank normalisation of one anchor row."""
     return bank_normalisation(
         row.capacitance_f,
