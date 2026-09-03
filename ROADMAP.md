@@ -55,7 +55,9 @@ this repository until it appears in the capability inventory with evidence.
   kernel exists, and the corona-model charge state.
 - **Device 3D model** (landed 2026-09-03) — a validated mechanical envelope
   of the Mather-type layout (insulator sleeve, cathode, chamber, closing
-  walls) and the seven analytic bodies tessellated into closed,
+  walls) and its analytic bodies — the anode, the insulator sleeve, every
+  rod of the squirrel-cage cathode, the chamber and the pinch column —
+  tessellated into closed,
   outward-oriented triangle meshes with a canonical model record and binary
   STL and glTF 2.0 exports, built on the geometry kernels of the library
   already pinned for the numerics kernel; parity of every body proven bit

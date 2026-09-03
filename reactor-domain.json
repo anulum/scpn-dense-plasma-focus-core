@@ -79,15 +79,16 @@
   },
   "kernel_library": {
     "distribution": "scpn-reactor-kernels",
-    "inventory_sha256": "b065c46b9f54d478d94be5cfeb61e1300b4ddae47e57f3992a985adfb2cb5dbf",
+    "inventory_sha256": "74674c943b274fd81c9c576e2e0cd7d7aca546a4664ded313143d20cb51003e2",
     "kernels": [
       "geometry_exports",
       "geometry_mesh_contract",
+      "geometry_placement",
       "geometry_primitives",
       "geometry_unit_circle",
       "numerics_transcendental"
     ],
-    "source_commit": "6f574bfdddadf24c6a4c0a020c0a257fec38231a",
+    "source_commit": "1abb8ffbae6f2f324693dc5278976c875d5e440b",
     "version": "0.1.0.dev0"
   },
   "license": "AGPL-3.0-or-later",

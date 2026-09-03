@@ -66,7 +66,7 @@
     "manifest_path": "reactor-domain.json",
     "manifest_schema": "scpn.reactor-domain.v1",
     "manifest_schema_version": "1.0.0",
-    "manifest_sha256": "876d43f87151d2ce804bc0b045521e97e799e7e370e99976f63b0e024cc831f8",
+    "manifest_sha256": "e84007d1caa1fe054bd7406d8d763011b5d4982f55c4dce7b384eb77b13a404e",
     "repository": "SCPN-DENSE-PLASMA-FOCUS-CORE"
   },
   "spo_registry": {

@@ -54,7 +54,8 @@ def reference_geometry() -> DeviceGeometry:
     return DeviceGeometry(
         insulator_sleeve_length_m=0.06,
         insulator_sleeve_wall_thickness_m=0.008,
-        cathode_wall_thickness_m=0.01,
+        cathode_rod_radius_m=0.006,
+        cathode_rod_count=12,
         cathode_length_m=0.32,
         chamber_inner_radius_m=0.15,
         chamber_wall_thickness_m=0.01,

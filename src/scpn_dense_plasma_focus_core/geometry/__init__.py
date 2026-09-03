@@ -8,8 +8,9 @@
 
 """Device geometry and tier-G1 3D model of the plasma-focus family.
 
-A validated device geometry, the composed device model record of seven
-analytic bodies, and the device-side provenance of the open-format
+A validated device geometry, the composed device model record of the
+anode, the insulator sleeve, every cathode rod, the chamber and the pinch
+column, and the device-side provenance of the open-format
 exports (binary STL, glTF 2.0 binary). The unit circle, the tessellation
 primitives, the closed-mesh contract and the serialisers are consumed
 from the pinned shared kernel library ``scpn_reactor_kernels``; the mesh
@@ -22,7 +23,9 @@ real machine. Design records: ADR 0006, ADR 0007.
 from __future__ import annotations
 
 from scpn_dense_plasma_focus_core.geometry.device import (
+    GEOMETRY_COUNT_FIELDS,
     GEOMETRY_FIELDS,
+    RECORD_FIELDS,
     DeviceGeometry,
     geometry_from_bytes,
     geometry_from_record,
@@ -37,27 +40,31 @@ from scpn_dense_plasma_focus_core.geometry.export import (
     write_stl,
 )
 from scpn_dense_plasma_focus_core.geometry.model import (
-    BODY_NAMES,
     MODEL_NON_CLAIMS,
     MODEL_SCHEMA,
     MODEL_SCHEMA_VERSION,
     MODEL_UNITS,
     DeviceModel3D,
+    body_names,
     build_device_model,
+    cathode_rod_names,
 )
 
 __all__ = [
-    "BODY_NAMES",
+    "GEOMETRY_COUNT_FIELDS",
     "GEOMETRY_FIELDS",
     "GLTF_GENERATOR",
     "MODEL_NON_CLAIMS",
     "MODEL_SCHEMA",
     "MODEL_SCHEMA_VERSION",
     "MODEL_UNITS",
+    "RECORD_FIELDS",
     "STL_HEADER",
     "DeviceGeometry",
     "DeviceModel3D",
+    "body_names",
     "build_device_model",
+    "cathode_rod_names",
     "geometry_from_bytes",
     "geometry_from_record",
     "glb_bytes",

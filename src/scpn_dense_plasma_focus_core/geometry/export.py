@@ -56,8 +56,8 @@ def glb_extras(model: DeviceModel3D) -> dict[str, Any]:
     -------
     dict[str, Any]
         Schema identity, both source digests, the model digest, the pinch
-        radius and length, the segment count, the units and the non-claims
-        of the model record.
+        radius and length, the rod count, the segment count, the units and
+        the non-claims of the model record.
     """
     record = model.to_record()
     return {
@@ -68,6 +68,7 @@ def glb_extras(model: DeviceModel3D) -> dict[str, Any]:
         "model_sha256": model.digest_sha256(),
         "pinch_radius_m": record["pinch_radius_m"],
         "pinch_length_m": record["pinch_length_m"],
+        "rod_count": record["rod_count"],
         "segments": record["segments"],
         "units": record["units"],
         "non_claims": record["non_claims"],

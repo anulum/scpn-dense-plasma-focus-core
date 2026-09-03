@@ -10,10 +10,12 @@ SCPN Dense Plasma Focus Core — ADR 0007
 
 # ADR 0007 — Device 3D model on the shared geometry kernels
 
-Status: accepted (2026-09-03). Adds the fourth implemented capability,
-`device_3d_model`, at `computational_prototype`, and amends ADR 0006 (the
-shared numerics kernels) by extending the same library pin with the four
-geometry kernels.
+Status: accepted (2026-09-03); item 4 and the simplification section are
+superseded by `docs/adr/0008-cathode-as-the-rod-cage.md` (the cathode is
+built as the rod cage it is, not as an equivalent tube). Adds the fourth
+implemented capability, `device_3d_model`, at `computational_prototype`, and
+amends ADR 0006 (the shared numerics kernels) by extending the same library
+pin with the geometry kernels.
 
 ## Context
 

@@ -24,7 +24,7 @@ clock semantics model (design record ADR 0003, evidence record
 physics (design record ADR 0005, evidence record
 `VALIDATION.md#level-0-device-physics`; owned domain
 `analytic_device_physics_models`, disjoint from solver mathematics) and the
-device 3D model (design record ADR 0007, evidence record
+device 3D model (design records ADR 0007 and ADR 0008, evidence record
 `VALIDATION.md#device-3d-model`; owned domain
 `device_geometry_and_3d_model`, built on the geometry kernels of the pinned
 library). Every other

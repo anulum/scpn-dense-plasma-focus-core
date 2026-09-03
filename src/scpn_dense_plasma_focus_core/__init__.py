@@ -41,7 +41,6 @@ from scpn_dense_plasma_focus_core.errors import (
     NumericsError,
 )
 from scpn_dense_plasma_focus_core.geometry import (
-    BODY_NAMES,
     GEOMETRY_FIELDS,
     MODEL_NON_CLAIMS,
     MODEL_SCHEMA,
@@ -49,7 +48,9 @@ from scpn_dense_plasma_focus_core.geometry import (
     MODEL_UNITS,
     DeviceGeometry,
     DeviceModel3D,
+    body_names,
     build_device_model,
+    cathode_rod_names,
     geometry_from_bytes,
     geometry_from_record,
     glb_bytes,
@@ -98,7 +99,6 @@ __version__: Final = "0.1.0.dev0"
 
 __all__ = [
     "APPLICABLE_CANDIDATES",
-    "BODY_NAMES",
     "CATALOGUE_BINDING",
     "DEUTERIUM_DRIVE_WINDOW",
     "GEOMETRY_FIELDS",
@@ -138,7 +138,9 @@ __all__ = [
     "RegistryBinding",
     "SemanticCarrier",
     "__version__",
+    "body_names",
     "build_device_model",
+    "cathode_rod_names",
     "configuration_from_bytes",
     "configuration_from_record",
     "envelope_for_plan",

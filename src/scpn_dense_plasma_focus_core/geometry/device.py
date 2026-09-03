@@ -12,16 +12,18 @@ The geometry complements the
 :class:`~scpn_dense_plasma_focus_core.configuration.DeviceConfiguration`
 (which carries the coaxial electrode pair and the bank and fill) with the
 device-owned mechanical envelope: the insulator sleeve over the anode
-base, the cathode wall and length, the vacuum chamber with its wall and
-length, and the two closing walls. The layout is the qualitative
-Mather-type arrangement of the plasma-focus literature on file — a
-central anode bar, a cathode coaxial with it attached to the back-wall
-plate, an insulator sleeve over the anode base whose length is a printed
-device parameter, and the plasma chamber around them (IAEA-TECDOC-1829,
-IAEA Vienna 2017) — with the electrode pair idealised as the coaxial
-line of the model this repository implements (S. Lee, J. Fusion Energ. 33
-(2014) 319). No dimension of any device is used, and every parameter set
-is synthetic.
+base, the squirrel-cage cathode (rod radius, rod count and cathode
+length; the rods stand on the coaxial circle of the configuration's
+cathode radius), the vacuum chamber with its wall and length, and the two
+closing walls. The layout is the Mather-type arrangement of the
+plasma-focus literature on file — a central anode bar, a squirrel-cage
+cathode of equally spaced rods on a coaxial circle attached to the
+back-wall plate, an insulator sleeve over the anode base whose length is
+a printed device parameter, and the plasma chamber around them
+(IAEA-TECDOC-1829, IAEA Vienna 2017). The rods are modelled as the rods
+they are; the coaxial-line idealisation of the model this repository
+implements (S. Lee, J. Fusion Energ. 33 (2014) 319) governs the physics,
+not the geometry.
 
 The anode radius, the cathode radius and the anode length are not
 repeated here: they are the validated configuration's ``ElectrodeSet``,
@@ -37,13 +39,16 @@ import json
 from dataclasses import dataclass
 from typing import Any, Final
 
+from scpn_reactor_kernels.errors import GeometryError
+from scpn_reactor_kernels.geometry import require_circle_points
+
 from scpn_dense_plasma_focus_core.errors import DeviceGeometryError
 from scpn_dense_plasma_focus_core.parameters import require_positive
 
 GEOMETRY_FIELDS: Final = (
     "insulator_sleeve_length_m",
     "insulator_sleeve_wall_thickness_m",
-    "cathode_wall_thickness_m",
+    "cathode_rod_radius_m",
     "cathode_length_m",
     "chamber_inner_radius_m",
     "chamber_wall_thickness_m",
@@ -51,6 +56,8 @@ GEOMETRY_FIELDS: Final = (
     "back_wall_thickness_m",
     "end_wall_thickness_m",
 )
+GEOMETRY_COUNT_FIELDS: Final = ("cathode_rod_count",)
+RECORD_FIELDS: Final = GEOMETRY_FIELDS + GEOMETRY_COUNT_FIELDS
 
 
 def _positive(name: str, value: float) -> float:
@@ -90,9 +97,11 @@ class DeviceGeometry:
         strictly positive.
     insulator_sleeve_wall_thickness_m
         Radial wall thickness of the insulator sleeve; strictly positive.
-    cathode_wall_thickness_m
-        Radial wall thickness of the cathode drawn as the equivalent
-        coaxial conductor; strictly positive.
+    cathode_rod_radius_m
+        Radius of one cathode rod of the squirrel cage; strictly positive.
+    cathode_rod_count
+        Number of cathode rods equally spaced on the coaxial circle of the
+        configuration's cathode radius; at least three.
     cathode_length_m
         Axial length of the cathode; strictly positive and at most the
         chamber length.
@@ -111,19 +120,21 @@ class DeviceGeometry:
     Raises
     ------
     DeviceGeometryError
-        If any value is non-finite or not strictly positive, or if the
-        cathode is longer than the chamber.
+        If any value is non-finite or not strictly positive, if fewer than
+        three rods are declared, or if the cathode is longer than the
+        chamber.
     """
 
     insulator_sleeve_length_m: float
     insulator_sleeve_wall_thickness_m: float
-    cathode_wall_thickness_m: float
+    cathode_rod_radius_m: float
     cathode_length_m: float
     chamber_inner_radius_m: float
     chamber_wall_thickness_m: float
     chamber_length_m: float
     back_wall_thickness_m: float
     end_wall_thickness_m: float
+    cathode_rod_count: int
 
     def __post_init__(self) -> None:
         """Validate every value and the axial containment invariant.
@@ -135,6 +146,10 @@ class DeviceGeometry:
         """
         for name in GEOMETRY_FIELDS:
             _positive(name, getattr(self, name))
+        try:
+            require_circle_points(self.cathode_rod_count)
+        except GeometryError as exc:
+            raise DeviceGeometryError(f"cathode_rod_count: {exc}") from exc
         if self.cathode_length_m > self.chamber_length_m:
             raise DeviceGeometryError(
                 "cathode_length_m: must not exceed chamber_length_m, got "
@@ -146,15 +161,15 @@ class DeviceGeometry:
         """Outer radius of the chamber (bore plus wall)."""
         return self.chamber_inner_radius_m + self.chamber_wall_thickness_m
 
-    def to_record(self) -> dict[str, float]:
+    def to_record(self) -> dict[str, float | int]:
         """Project the geometry to a JSON-serialisable record.
 
         Returns
         -------
-        dict[str, float]
+        dict[str, float | int]
             Every declared parameter under its name.
         """
-        return {name: getattr(self, name) for name in GEOMETRY_FIELDS}
+        return {name: getattr(self, name) for name in RECORD_FIELDS}
 
     def canonical_bytes(self) -> bytes:
         """Serialise the geometry canonically.
@@ -207,6 +222,32 @@ def _number(record: dict[str, Any], field: str) -> float:
     return float(value)
 
 
+def _count(record: dict[str, Any], field: str) -> int:
+    """Return one required integer field of a record.
+
+    Parameters
+    ----------
+    record
+        Decoded JSON object.
+    field
+        Field name to read.
+
+    Returns
+    -------
+    int
+        The field value as an int.
+
+    Raises
+    ------
+    DeviceGeometryError
+        If the field is missing or not an integer (booleans rejected).
+    """
+    value = record.get(field)
+    if isinstance(value, bool) or not isinstance(value, int):
+        raise DeviceGeometryError(f"{field}: must be an integer, got {value!r}")
+    return value
+
+
 def geometry_from_record(record: Any) -> DeviceGeometry:
     """Build a validated geometry from a decoded record.
 
@@ -229,10 +270,13 @@ def geometry_from_record(record: Any) -> DeviceGeometry:
     """
     if not isinstance(record, dict):
         raise DeviceGeometryError("record: must be an object")
-    unknown = sorted(set(record) - set(GEOMETRY_FIELDS))
+    unknown = sorted(set(record) - set(RECORD_FIELDS))
     if unknown:
         raise DeviceGeometryError(f"record: unknown fields {unknown!r}")
-    return DeviceGeometry(**{name: _number(record, name) for name in GEOMETRY_FIELDS})
+    values: dict[str, Any] = {name: _number(record, name) for name in GEOMETRY_FIELDS}
+    for name in GEOMETRY_COUNT_FIELDS:
+        values[name] = _count(record, name)
+    return DeviceGeometry(**values)
 
 
 def geometry_from_bytes(data: bytes) -> DeviceGeometry:

@@ -57,7 +57,7 @@ jobs:
           python -m pip install -r requirements-dev.txt maturin==1.14.0
           python -m pip install -e .
           python -m pip install --no-deps --no-build-isolation ./rust
-          python -m pip install --no-deps --no-build-isolation "scpn-reactor-kernels-native @ git+https://github.com/anulum/scpn-reactor-kernels.git@6f574bfdddadf24c6a4c0a020c0a257fec38231a#subdirectory=rust"
+          python -m pip install --no-deps --no-build-isolation "scpn-reactor-kernels-native @ git+https://github.com/anulum/scpn-reactor-kernels.git@1abb8ffbae6f2f324693dc5278976c875d5e440b#subdirectory=rust"
           pytest -q tests/test_physics_native_parity.py tests/test_geometry_native_parity.py
       - name: Benchmark smoke (both backends must be measured)
         run: |

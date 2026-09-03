@@ -22,7 +22,7 @@ dynamic = ["version"]
 # kernel inventory are recorded in reactor-domain.json (kernel_library) and
 # a contract test proves the two pins agree.
 dependencies = [
-    "scpn-reactor-kernels @ git+https://github.com/anulum/scpn-reactor-kernels.git@6f574bfdddadf24c6a4c0a020c0a257fec38231a",
+    "scpn-reactor-kernels @ git+https://github.com/anulum/scpn-reactor-kernels.git@1abb8ffbae6f2f324693dc5278976c875d5e440b",
 ]
 
 [tool.setuptools.dynamic]

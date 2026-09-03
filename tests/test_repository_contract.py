@@ -240,6 +240,7 @@ def test_kernel_library_pin_agrees_with_the_dependency_the_crate_and_the_package
     assert pin["kernels"] == [
         "geometry_exports",
         "geometry_mesh_contract",
+        "geometry_placement",
         "geometry_primitives",
         "geometry_unit_circle",
         "numerics_transcendental",

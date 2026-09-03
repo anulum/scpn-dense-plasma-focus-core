@@ -14,6 +14,7 @@ import dataclasses
 import hashlib
 import json
 import math
+from typing import Any
 
 import pytest
 
@@ -21,6 +22,7 @@ from geometry_fixtures import reference_geometry
 from scpn_dense_plasma_focus_core.errors import DeviceGeometryError
 from scpn_dense_plasma_focus_core.geometry import (
     GEOMETRY_FIELDS,
+    RECORD_FIELDS,
     DeviceGeometry,
     geometry_from_bytes,
     geometry_from_record,
@@ -36,8 +38,9 @@ def test_derived_outer_radius() -> None:
 @pytest.mark.parametrize("value", [0.0, -1.0, math.nan, math.inf])
 def test_every_field_must_be_finite_and_positive(field: str, value: float) -> None:
     """Non-finite and non-positive values fail closed on every field."""
+    changes: dict[str, Any] = {field: value}
     with pytest.raises(DeviceGeometryError, match=field):
-        dataclasses.replace(reference_geometry(), **{field: value})
+        dataclasses.replace(reference_geometry(), **changes)
 
 
 def test_cathode_must_fit_the_chamber_length() -> None:
@@ -48,11 +51,24 @@ def test_cathode_must_fit_the_chamber_length() -> None:
     assert flush.cathode_length_m == flush.chamber_length_m
 
 
+def test_rod_count_must_be_an_integer_of_at_least_three() -> None:
+    """Fewer than three rods cannot enclose the anode; booleans are not counts."""
+    for count in (2, 1, 0, -4):
+        with pytest.raises(DeviceGeometryError, match="cathode_rod_count"):
+            dataclasses.replace(reference_geometry(), cathode_rod_count=count)
+    record = reference_geometry().to_record()
+    for value in (None, "12", True, 12.0):
+        record["cathode_rod_count"] = value  # type: ignore[assignment]
+        with pytest.raises(DeviceGeometryError, match="must be an integer"):
+            geometry_from_record(record)
+
+
 def test_record_round_trip_and_digest() -> None:
     """The canonical bytes are sorted JSON and the digest identifies them."""
     geometry = reference_geometry()
     record = geometry.to_record()
-    assert tuple(record) == GEOMETRY_FIELDS
+    assert tuple(record) == RECORD_FIELDS
+    assert set(GEOMETRY_FIELDS) < set(RECORD_FIELDS)
     data = geometry.canonical_bytes()
     assert data.endswith(b"\n")
     assert json.loads(data) == record

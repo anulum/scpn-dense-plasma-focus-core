@@ -11,7 +11,8 @@ SCPN Dense Plasma Focus Core — Device 3D model contract
 # Device 3D model contract
 
 Producer-owned contract of the `device_3d_model` capability
-(`computational_prototype`; design records ADR 0006 and ADR 0007). It
+(`computational_prototype`; design records ADR 0006, ADR 0007 and ADR
+0008). It
 states exactly what the exported files contain so that a consumer — the
 portfolio presentation layer, an engineering tool, a reviewer — can read
 them without importing this package. Nothing in the files or in this
@@ -22,13 +23,13 @@ contract creates a federation, a claim, or an engineering statement.
 | Record | Schema | Identity |
 |---|---|---|
 | Device configuration | package `DeviceConfiguration` record | `configuration_digest_sha256` |
-| Device geometry | package `DeviceGeometry` record (nine SI fields) | `geometry_digest_sha256` |
+| Device geometry | package `DeviceGeometry` record (nine SI fields and the rod count) | `geometry_digest_sha256` |
 | Device model | `scpn.dense-plasma-focus-3d-model.v1` version `1.0.0` | `model_sha256` = SHA-256 of the canonical model record |
 | Body mesh | little-endian `uint32 vertex_count, uint32 face_count, float64 x y z per vertex, uint32 i j k per face` | `mesh_sha256` |
 
 The model record carries: `schema`, `schema_version`, `units`,
 `non_claims`, `configuration_digest_sha256`, `geometry_digest_sha256`,
-`pinch_radius_m`, `pinch_length_m`, `segments`, and `bodies` (one summary per body: `name`,
+`pinch_radius_m`, `pinch_length_m`, `rod_count`, `segments`, and `bodies` (one summary per body: `name`,
 `role`, `material_identifier`, `vertex_count`, `face_count`, `volume_m3`,
 `surface_area_m2`, `bounding_box_min_m`, `bounding_box_max_m`,
 `mesh_sha256`). Canonical bytes are UTF-8 JSON with sorted keys, minimal
@@ -47,20 +48,24 @@ separators and a trailing newline; NaN and infinity are never emitted.
 ## Bodies (fixed order, fixed names)
 
 `a`, `b` and `L_a` are the configuration's anode radius, cathode radius and
-anode length; `t_ins`/`L_ins` the insulator sleeve wall and length, `t_cat`/
-`L_cat` the cathode wall and length, `r_ch`/`t_ch`/`L_ch` the chamber bore,
-wall and length, `t_bw`/`t_ew` the back-wall and end-wall thickness, and
-`rp`/`zp` the declared pinch column.
+anode length; `t_ins`/`L_ins` the insulator sleeve wall and length, `r_rod`/
+`N`/`L_cat` the cathode rod radius, rod count and cathode length,
+`r_ch`/`t_ch`/`L_ch` the chamber bore, wall and length, `t_bw`/`t_ew` the
+back-wall and end-wall thickness, and `rp`/`zp` the declared pinch column.
+The body count is `6 + N`.
 
 | Node name | Role | Material token | Analytic body |
 |---|---|---|---|
 | `anode` | `electrode` | `electrode_conductor` | solid cylinder of radius `a`, `z in [0, L_a]` |
 | `insulator_sleeve` | `insulator` | `insulator_sleeve` | annular tube `a` to `a + t_ins`, `z in [0, L_ins]` |
-| `cathode` | `electrode` | `electrode_conductor` | annular tube `b` to `b + t_cat`, `z in [0, L_cat]` |
+| `cathode_rod_00` … `cathode_rod_<N-1>` | `electrode` | `electrode_conductor` | `N` solid cylinders of radius `r_rod`, `z in [0, L_cat]`, centres equally spaced on the circle of radius `b`, the first on the positive `x` axis and the rest in increasing angle |
 | `chamber_wall` | `vacuum_boundary` | `chamber_wall` | annular tube `r_ch` to `r_ch + t_ch`, `z in [0, L_ch]` |
 | `back_wall` | `vacuum_boundary` | `chamber_wall` | solid cylinder of the chamber outer radius, `z in [-t_bw, 0]` |
 | `end_wall_downstream` | `vacuum_boundary` | `chamber_wall` | solid cylinder of the chamber outer radius, `z in [L_ch, L_ch + t_ew]` |
 | `pinch_column` | `plasma` | `plasma` | solid cylinder of radius `rp`, `z in [L_a, L_a + zp]` |
+
+The rod index is zero-padded to the width of `N - 1`, so the node names sort
+in ring order for any count.
 
 Material tokens are declarations only; no density, composition,
 conductivity or nuclear property is carried anywhere.
@@ -86,7 +91,8 @@ Segment counts are multiples of eight (at least eight).
   accessor, mode `TRIANGLES`; buffer views are four-byte aligned. The
   document `extras` carry `schema`, `schema_version`,
   `configuration_digest_sha256`, `geometry_digest_sha256`, `model_sha256`,
-  `pinch_radius_m`, `pinch_length_m`, `segments`, `units` and `non_claims`. No materials,
+  `pinch_radius_m`, `pinch_length_m`, `rod_count`, `segments`, `units` and
+  `non_claims`. No materials,
   textures, animations or extensions are used.
 
 ## Determinism
@@ -104,13 +110,12 @@ header and the glTF `asset.generator` name that kernel, while the document
 `extras` carry this repository's provenance. A change of the library pin
 is a governed data change of this repository.
 
-## Simplifications
+## What is not modelled
 
-The cathode is the equivalent coaxial conductor of the model this
-repository implements, not the squirrel cage of discrete rods a real
-assembly carries: rod count, spacing and diameter are not modelled at this
-tier. Insulator end fittings, gas ports, diagnostic windows, the collector
-plate and supports are not modelled either.
+The rods are straight cylinders: their mounting into the back-wall plate,
+any taper or chamfer, and the insulator end fittings are absent. Gas ports,
+diagnostic windows, the collector plate and supports are absent too. Nothing
+in the model stands in for something it is not.
 
 ## Non-claims
 

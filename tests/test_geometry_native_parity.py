@@ -43,6 +43,17 @@ def native_bodies(segments: int) -> list[tuple[list[float], list[int]]]:
     anode_length = electrodes.anode_length_m
     chamber_outer = geometry.chamber_outer_radius_m
     chamber_length = geometry.chamber_length_m
+    rod_vertices, rod_faces = native.tessellate_cylinder(
+        geometry.cathode_rod_radius_m, 0.0, geometry.cathode_length_m, segments
+    )
+    ring = native.ring_offsets(geometry.cathode_rod_count, cathode_radius)
+    rods = tuple(
+        (
+            native.translate(rod_vertices, ring[2 * index], ring[2 * index + 1], 0.0),
+            rod_faces,
+        )
+        for index in range(geometry.cathode_rod_count)
+    )
     streams = (
         native.tessellate_cylinder(anode_radius, 0.0, anode_length, segments),
         native.tessellate_annular_tube(
@@ -52,13 +63,7 @@ def native_bodies(segments: int) -> list[tuple[list[float], list[int]]]:
             geometry.insulator_sleeve_length_m,
             segments,
         ),
-        native.tessellate_annular_tube(
-            cathode_radius,
-            cathode_radius + geometry.cathode_wall_thickness_m,
-            0.0,
-            geometry.cathode_length_m,
-            segments,
-        ),
+        *rods,
         native.tessellate_annular_tube(
             geometry.chamber_inner_radius_m,
             chamber_outer,
@@ -89,7 +94,7 @@ def native_bodies(segments: int) -> list[tuple[list[float], list[int]]]:
 def test_every_body_is_bit_exact_with_the_library_native_kernels(
     segments: int,
 ) -> None:
-    """Vertices, faces, volume and area of all seven bodies agree bit for bit."""
+    """Vertices, faces, volume and area of every body agree bit for bit."""
     model = build_device_model(
         reference_configuration(),
         reference_geometry(),

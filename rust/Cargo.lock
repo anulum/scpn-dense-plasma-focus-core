@@ -112,7 +112,7 @@ dependencies = [
 [[package]]
 name = "scpn-reactor-kernels-rs"
 version = "0.1.0"
-source = "git+https://github.com/anulum/scpn-reactor-kernels.git?rev=6f574bfdddadf24c6a4c0a020c0a257fec38231a#6f574bfdddadf24c6a4c0a020c0a257fec38231a"
+source = "git+https://github.com/anulum/scpn-reactor-kernels.git?rev=1abb8ffbae6f2f324693dc5278976c875d5e440b#1abb8ffbae6f2f324693dc5278976c875d5e440b"
 
 [[package]]
 name = "syn"

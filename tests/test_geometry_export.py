@@ -29,10 +29,10 @@ from geometry_fixtures import (
     reference_geometry,
 )
 from scpn_dense_plasma_focus_core.geometry import (
-    BODY_NAMES,
     GLTF_GENERATOR,
     STL_HEADER,
     DeviceModel3D,
+    body_names,
     build_device_model,
     glb_bytes,
     glb_extras,
@@ -78,8 +78,9 @@ def test_glb_layout_nodes_and_accessors(segments: int) -> None:
     model = reference_model(segments)
     document, binary = read_glb(glb_bytes(model))
     assert document["asset"] == {"version": "2.0", "generator": GLTF_GENERATOR}
-    assert document["scenes"] == [{"nodes": list(range(len(BODY_NAMES)))}]
-    assert [node["name"] for node in document["nodes"]] == list(BODY_NAMES)
+    names = body_names(model.rod_count)
+    assert document["scenes"] == [{"nodes": list(range(len(names)))}]
+    assert [node["name"] for node in document["nodes"]] == list(names)
     assert document["buffers"][0]["byteLength"] <= len(binary)
     extras = document["extras"]
     assert extras["schema"] == "scpn.dense-plasma-focus-3d-model.v1"
@@ -87,6 +88,7 @@ def test_glb_layout_nodes_and_accessors(segments: int) -> None:
     assert extras["segments"] == segments
     assert extras["pinch_radius_m"] == REFERENCE_PINCH_RADIUS_M
     assert extras["pinch_length_m"] == REFERENCE_PINCH_LENGTH_M
+    assert extras["rod_count"] == model.rod_count
     assert extras["units"]["length"] == "metre"
     for index, mesh in enumerate(model.meshes):
         node = document["nodes"][index]
@@ -132,6 +134,7 @@ def test_exports_delegate_to_the_library_kernels_with_device_provenance() -> Non
         "model_sha256": model.digest_sha256(),
         "pinch_radius_m": REFERENCE_PINCH_RADIUS_M,
         "pinch_length_m": REFERENCE_PINCH_LENGTH_M,
+        "rod_count": model.rod_count,
         "segments": 8,
         "units": model.to_record()["units"],
         "non_claims": model.to_record()["non_claims"],

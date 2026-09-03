@@ -39,9 +39,11 @@ of twelve fitted machines, evaluated through the pinned shared numerics
 kernels of `scpn-reactor-kernels`, with optional native kernels proven
 bit-exact against the Python floor (ADR 0005 and ADR 0006, evidence:
 `VALIDATION.md#level-0-device-physics`); and the device 3D model — a
-validated mechanical envelope of the Mather-type layout and seven analytic
-bodies tessellated into closed triangle meshes with binary STL and glTF 2.0
-exports, built on the geometry kernels of the same pinned library (ADR 0007,
+validated mechanical envelope of the Mather-type layout and its analytic
+bodies — the anode, the insulator sleeve, every rod of the squirrel-cage
+cathode, the chamber and the declared pinch column — tessellated into closed
+triangle meshes with binary STL and glTF 2.0 exports, built on the geometry
+and placement kernels of the same pinned library (ADR 0007 and ADR 0008,
 evidence: `VALIDATION.md#device-3d-model`, consumer contract:
 `docs/DEVICE_3D_MODEL_CONTRACT.md`). No parameter set, channel or body
 describes any real machine or diagnostic; the claim inventory is empty

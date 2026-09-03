@@ -34,24 +34,27 @@ SCPN Dense Plasma Focus Core — CHANGELOG
 
 - Device 3D model (`src/scpn_dense_plasma_focus_core/geometry/`), the fourth
   implemented capability at `computational_prototype` (ADR 0007, which amends
-  ADR 0006): a validated `DeviceGeometry` of the Mather-type mechanical
-  envelope (insulator-sleeve length and wall, cathode wall and length,
-  chamber bore, wall and length, back-wall and end-wall thickness — the
-  anode radius, cathode radius and anode length stay in the configuration),
-  and a `DeviceModel3D` record (`scpn.dense-plasma-focus-3d-model.v1`)
-  composing seven closed, outward-oriented triangle bodies: anode, insulator
-  sleeve, cathode, chamber wall, back wall, downstream end wall and the
-  declared pinch column standing on the anode tip. The layout follows the
-  documents already on file for the level-0 models; every dimension is
-  synthetic, and the cathode is the model's equivalent coaxial conductor,
-  not the squirrel cage of discrete rods. Binary STL and glTF 2.0 binary
-  exports carry the device provenance in the document `extras`. The manifest
-  block `kernel_library` gains the four geometry kernels at the commit
-  already pinned, the capability and the owned domain
-  `device_geometry_and_3d_model`; descriptor and inventory regenerated; the
-  envelope fixture regenerated for the new `manifest_sha256` (plan bytes
-  unchanged). Every body is proven bit-exact against the library's native
-  module. A standard-conformant benchmark
+  ADR 0006, and ADR 0008): a validated `DeviceGeometry` of the Mather-type
+  mechanical envelope (insulator-sleeve length and wall, cathode rod radius,
+  rod count and cathode length, chamber bore, wall and length, back-wall and
+  end-wall thickness — the anode radius, cathode radius and anode length stay
+  in the configuration), and a `DeviceModel3D` record
+  (`scpn.dense-plasma-focus-3d-model.v1`) composing `6 + N` closed,
+  outward-oriented triangle bodies: anode, insulator sleeve, the `N` cathode
+  rods of the squirrel cage placed on the coaxial circle of the cathode
+  radius, chamber wall, back wall, downstream end wall and the declared pinch
+  column standing on the anode tip. The layout follows the documents already
+  on file for the level-0 models; every dimension is declared, and the
+  cathode is built as the rod cage it is — a rod that would reach the
+  insulator sleeve and a rod set whose members would intersect are both
+  refused. Binary STL and glTF 2.0 binary exports carry the device
+  provenance, the rod count included, in the document `extras`. The manifest
+  block `kernel_library` gains the geometry kernels and the placement kernel
+  and moves to the library commit that carries the latter, the capability and
+  the owned domain `device_geometry_and_3d_model`; descriptor and inventory
+  regenerated; the envelope fixture regenerated for the new
+  `manifest_sha256` (plan bytes unchanged). Every body is proven bit-exact
+  against the library's native module. A standard-conformant benchmark
   (`benchmarks/device_model_3d.py`) with a committed local artefact and a
   `docs/benchmarks.md` section; the native CI job additionally builds the
   library's native module so the geometry parity file never skips.

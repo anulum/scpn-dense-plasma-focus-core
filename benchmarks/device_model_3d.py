@@ -11,7 +11,8 @@
 Follows the ecosystem benchmark standard: warm-up, repeated samples,
 percentiles, one row per (operation, backend), unavailable backends marked
 explicitly, full provenance in the artefact. The operation is one full
-device tessellation (seven bodies) at a declared segment count followed by
+device tessellation (the anode, the sleeve, every cathode rod, the
+chamber and the pinch column) at a declared segment count followed by
 the signed volume and surface area of every body; each sample times one
 full pass and the cost is reported per generated face. Both backends are
 the pinned shared kernel library's: the floor row builds the validated
@@ -85,7 +86,8 @@ def synthetic_design() -> tuple[DeviceConfiguration, DeviceGeometry]:
     geometry = DeviceGeometry(
         insulator_sleeve_length_m=0.06,
         insulator_sleeve_wall_thickness_m=0.008,
-        cathode_wall_thickness_m=0.01,
+        cathode_rod_radius_m=0.006,
+        cathode_rod_count=12,
         cathode_length_m=0.32,
         chamber_inner_radius_m=0.15,
         chamber_wall_thickness_m=0.01,
@@ -143,6 +145,19 @@ def native_pass_factory() -> Callable[[int], tuple[float, int]] | None:
         anode_length = electrodes.anode_length_m
         chamber_outer = geometry.chamber_outer_radius_m
         chamber_length = geometry.chamber_length_m
+        rod_vertices, rod_faces = native.tessellate_cylinder(
+            geometry.cathode_rod_radius_m, 0.0, geometry.cathode_length_m, segments
+        )
+        ring = native.ring_offsets(geometry.cathode_rod_count, cathode_radius)
+        rods = tuple(
+            (
+                native.translate(
+                    rod_vertices, ring[2 * index], ring[2 * index + 1], 0.0
+                ),
+                rod_faces,
+            )
+            for index in range(geometry.cathode_rod_count)
+        )
         bodies = (
             native.tessellate_cylinder(anode_radius, 0.0, anode_length, segments),
             native.tessellate_annular_tube(
@@ -152,13 +167,7 @@ def native_pass_factory() -> Callable[[int], tuple[float, int]] | None:
                 geometry.insulator_sleeve_length_m,
                 segments,
             ),
-            native.tessellate_annular_tube(
-                cathode_radius,
-                cathode_radius + geometry.cathode_wall_thickness_m,
-                0.0,
-                geometry.cathode_length_m,
-                segments,
-            ),
+            *rods,
             native.tessellate_annular_tube(
                 geometry.chamber_inner_radius_m,
                 chamber_outer,
