@@ -18,8 +18,16 @@ import math
 import pytest
 
 from geometry_fixtures import (
+    ANCHOR_ANODE_LENGTH_M,
+    ANCHOR_ANODE_RADIUS_M,
+    ANCHOR_CATHODE_RADIUS_M,
+    ANCHOR_ROD_COUNT,
+    ANCHOR_ROD_RADIUS_M,
+    ANCHOR_SLEEVE_LENGTH_M,
     REFERENCE_PINCH_LENGTH_M,
     REFERENCE_PINCH_RADIUS_M,
+    anchor_configuration,
+    anchor_geometry,
     reference_configuration,
     reference_geometry,
 )
@@ -37,7 +45,7 @@ from scpn_dense_plasma_focus_core.geometry import (
 from scpn_dense_plasma_focus_core.parameters import ElectrodeSet
 
 REFERENCE_MODEL_SHA256 = (
-    "ee3de2ec8afc9cccd767fedc4df8b5679b380db3cf1d6843881654ce5cee7a62"
+    "7da7f0002b90baf598c41375892c5184bc47f0bc82ec94283827823902f31c86"
 )
 REFERENCE_ROD_COUNT = 12
 
@@ -365,3 +373,37 @@ def test_body_inventory_is_enforced() -> None:
             segments=8,
             meshes=model.meshes[::-1],
         )
+
+
+def test_model_of_the_printed_electrode_assembly_reproduces_its_dimensions() -> None:
+    """The anchor geometry reproduces every dimension the source prints.
+
+    IAEA-TECDOC-1829 p. 231 prints the NX3 assembly A20Z160: an anode of
+    length 160 mm and radius 20 mm with a squirrel-cage cathode of twelve
+    brass rods of 12 mm diameter on a coaxial circle of radius 51 mm; the
+    insulator-sleeve length of 30 mm is printed for the same device. This
+    proves the tier can carry a published arrangement, not that the model
+    says anything about how that machine behaves.
+    """
+    configuration = anchor_configuration()
+    geometry = anchor_geometry()
+    model = build_device_model(configuration, geometry, 0.0024, 0.05, 512)
+    anode = model.meshes[0]
+    sleeve = model.meshes[1]
+    rods = model.meshes[2 : 2 + ANCHOR_ROD_COUNT]
+    assert model.rod_count == ANCHOR_ROD_COUNT
+    assert len(rods) == ANCHOR_ROD_COUNT == 12
+    assert anode.bounding_box()[1][0] == ANCHOR_ANODE_RADIUS_M
+    assert anode.bounding_box()[1][2] == ANCHOR_ANODE_LENGTH_M
+    assert sleeve.bounding_box()[1][2] == ANCHOR_SLEEVE_LENGTH_M
+    for rod in rods:
+        low, high = rod.bounding_box()
+        centre_x = (low[0] + high[0]) / 2.0
+        centre_y = (low[1] + high[1]) / 2.0
+        assert math.hypot(centre_x, centre_y) == pytest.approx(
+            ANCHOR_CATHODE_RADIUS_M, abs=1.0e-12
+        )
+        assert (high[0] - low[0]) == pytest.approx(
+            2.0 * ANCHOR_ROD_RADIUS_M, rel=1.0e-4
+        )
+    assert model.digest_sha256() != reference_model(512).digest_sha256()

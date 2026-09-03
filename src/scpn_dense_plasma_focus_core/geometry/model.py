@@ -66,7 +66,8 @@ MODEL_NON_CLAIMS: Final = (
     "no body is a compression boundary, a CAD solid or an engineering model",
     "the rods are straight cylinders; their mounting hardware is not modelled",
     "no material property, load, field or neutronic quantity is carried",
-    "no value describes or validates any real machine",
+    "a dimension reproduced from a published arrangement is an anchor,"
+    " not a claim about that machine",
 )
 
 ROLE_ELECTRODE: Final = "electrode"

@@ -327,8 +327,13 @@ the coverage gate (`src/scpn_dense_plasma_focus_core/geometry/`):
   non-integer rod count; every rejection branch is tested. The anode radius, the cathode radius and the anode length stay in
   the configuration's `ElectrodeSet`. The layout is the qualitative
   Mather-type arrangement of the documents already on file for the level-0
-  models (IAEA-TECDOC-1829; S. Lee, J. Fusion Energ. 33 (2014) 319); no
-  dimension of any device is used.
+  models (IAEA-TECDOC-1829; S. Lee, J. Fusion Energ. 33 (2014) 319). The
+  reference fixtures are synthetic; one anchor fixture carries the
+  dimensions IAEA-TECDOC-1829 p. 231 prints for the NX3 assembly A20Z160
+  (anode radius 20 mm and length 160 mm, twelve rods of 12 mm diameter on a
+  circle of radius 51 mm, insulator-sleeve length 30 mm) and a test proves
+  the model reproduces every one of them. Reproducing a printed dimension is
+  an anchor, never a claim about that machine.
 - **Kernel library pin**: the manifest block `kernel_library` lists the four
   geometry kernels, the placement kernel and the numerics kernel at one
   commit and inventory digest; the contract test proves the manifest, the

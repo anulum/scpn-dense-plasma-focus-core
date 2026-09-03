@@ -55,8 +55,12 @@ dependency and no new pin — only four kernel identifiers to the block.
    base whose length is a printed device parameter, and the plasma chamber
    (IAEA-TECDOC-1829, IAEA Vienna 2017), with the electrode pair idealised as
    the coaxial line of the model this repository implements (S. Lee, J. Fusion
-   Energ. 33 (2014) 319). No dimension of any device is used; every parameter
-   set is synthetic.
+   Energ. 33 (2014) 319). Parameter sets are declared by the caller: the
+   repository's reference fixtures are synthetic and one anchor fixture
+   carries the dimensions the source prints, so the tier can be checked
+   against a published arrangement exactly as the level-0 models are checked
+   against published numbers. Reproducing a printed dimension is an anchor;
+   no claim about that machine follows from it.
 4. The model is tier G1: analytic bodies (solid cylinders and annular tubes)
    tessellated into closed, outward-oriented triangle meshes with fixed vertex
    and face order. Seven bodies in a fixed order: anode, insulator sleeve,
