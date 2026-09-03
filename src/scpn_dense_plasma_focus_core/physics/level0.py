@@ -66,16 +66,24 @@ from scpn_dense_plasma_focus_core.physics.radial import (
 LEVEL0_SCHEMA: Final = "scpn.dense-plasma-focus-level0-physics.v1"
 LEVEL0_SCHEMA_VERSION: Final = "1.0.0"
 LEVEL0_NON_CLAIMS: Final = (
-    "closed-form evaluation of the published relations of the Lee model on a "
-    "synthetic configuration and a declared pinch state",
-    "no phase of the model is integrated; no shot is simulated; no current "
-    "waveform is fitted",
-    "no yield, gain, reactivity, confinement or breakeven statement; the "
-    "beam-target and scaling-law values are consistency instruments at the "
-    "declared inputs",
-    "no value describes or validates any real machine; the anchors reproduce "
-    "numbers printed in the sources, which are themselves outputs of the "
-    "fitted code",
+    (
+        "closed-form evaluation of the published relations of the Lee model on a "
+        "synthetic configuration and a declared pinch state"
+    ),
+    (
+        "no phase of the model is integrated; no shot is simulated; no current "
+        "waveform is fitted"
+    ),
+    (
+        "no yield, gain, reactivity, confinement or breakeven statement; the "
+        "beam-target and scaling-law values are consistency instruments at the "
+        "declared inputs"
+    ),
+    (
+        "no value describes or validates any real machine; the anchors reproduce "
+        "numbers printed in the sources, which are themselves outputs of the "
+        "fitted code"
+    ),
 )
 #: Relative tolerance between the declared bank energy and ``C0 V0^2 / 2``
 #: (the source's own table rounds ``E0`` to one significant digit for

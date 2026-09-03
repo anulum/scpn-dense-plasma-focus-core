@@ -36,6 +36,7 @@ REGISTRY = RegistryBinding(version="1.0.0", digest_sha256="0" * 64)
 def synthetic_configuration(
     identifier: str = "dense_plasma_focus",
     peak_current_ma: float = 0.3,
+    *,
     deuterium_fill: bool = True,
 ) -> DeviceConfiguration:
     """Build a valid synthetic configuration with optional overrides."""
