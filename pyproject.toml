@@ -149,7 +149,7 @@ max-statements = 52
 # every parameter by name, so the signature cannot be keyword-only and the
 # boolean is the case under test rather than a flag a caller might confuse
 # (scope of FBT001)
-"tests/test_observability.py" = ["S101", "FBT001"]
+"tests/test_observability_transformations.py" = ["FBT001"]
 # the STEP round trip re-imports the export in a separate reader process
 # (the consumer scenario): a fixed argument vector with the test's own
 # interpreter and a tmp_path file, without a shell and without untrusted
@@ -178,6 +178,7 @@ known-first-party = [
     "preflight",
     "physics_fixtures",
     "geometry_fixtures",
+    "observability_fixtures",
 ]
 
 [tool.mypy]
