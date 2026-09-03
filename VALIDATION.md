@@ -394,3 +394,87 @@ Bounded claims — what is NOT claimed:
   benchmark measures tessellation cost of two implementations of the same
   kernels, not physics.
 - Maturity stays `computational_prototype`.
+
+## Device CAD model
+
+Evidence record of the `device_cad_model` capability
+(`computational_prototype`; design record: `docs/adr/0009-device-cad-model.md`;
+the STEP surface of the consumer contract `docs/DEVICE_3D_MODEL_CONTRACT.md`).
+
+The B-rep, placement, STEP, faceting and body-evidence kernels are the
+shared library's `cad` group (`scpn-reactor-kernels` pinned in the
+manifest `kernel_library` block, in `pyproject.toml` with the `cad` extra
+and in the crate); their evidence is the library's, at its
+`VALIDATION.md#cad-kernels`. What this repository exercises
+(`src/scpn_dense_plasma_focus_core/geometry/cad.py`,
+`tests/test_geometry_cad.py`):
+
+- **Same design, same bodies**: the eighteen B-rep bodies of the reference
+  design (anode, insulator sleeve, twelve cathode rods, chamber wall, two
+  closing walls, pinch column) are built at the names, roles, material
+  tokens and extents of the tier-G1 model, proven by an inventory
+  comparison against `build_device_model`.
+- **The cathode is a cage at this tier too**: one solid per rod, named in
+  ring order, each centred on the configuration's cathode circle at the
+  centre the tier-G1 model uses (agreement to `1e-12`), each of the
+  declared rod radius and spanning the declared cathode length. The
+  centres are the library's, so the two tiers cannot drift apart.
+- **B-rep measures against the analytic closed forms**: every body's
+  OpenCASCADE volume and surface area agree with the analytic cylinder or
+  tube forms within the library's measure tolerance `1e-9` relative
+  (measured `0` to `1.2e-15` for volume and `0` to `1.5e-16` for area),
+  fail-closed by construction of the record. The closed forms are
+  evaluated on the fixture values in the library's operation order, not
+  written as decimal literals.
+- **Faceting evidence**: every body faceted at the declared deflections
+  (linear `1e-4 m`, angular `0.1 rad`) validates as a closed,
+  outward-oriented mesh of the tier-G1 contract; the faceted volume
+  deficit stays within the declared bound `2 d / r` (measured `3.5e-5` to
+  `2.6e-4` against bounds `1.3e-3` to `3.3e-2`), and the faceted volume
+  agrees with the tier-G1 reference mesh at the declared eight segments
+  within the exact polygon-deficit bound `0.09968` (measured `9.942e-2` to
+  `9.965e-2`).
+- **Anchor**: the anode radius and length, the cathode circle radius, the
+  rod radius and count, and the insulator-sleeve length that
+  IAEA-TECDOC-1829 prints for the NX3 assembly A20Z160 all appear in the
+  built solids, proven from the assembly manifest's bounding boxes. A
+  dimension reproduced from a published arrangement is an anchor, not a
+  claim about that machine, and the fields the source does not print are
+  declared as declared in the fixture.
+- **Refusals**: the tier-G1 invariants are enforced on the same path,
+  before any solid is built — a rod set whose members would intersect, a
+  pinch column outside the anode radius, an invalid segment count and an
+  invalid deflection are all refused; a foreign body inventory, a foreign
+  manifest schema, a wrong body count and a malformed STEP digest are
+  refused by the record.
+- **STEP export**: the written file is exactly the byte string whose
+  SHA-256 the record carries as `step_sha256`; two builds of the same
+  design are byte-identical in the pinned back-end environment; a
+  re-import in a separate reader process reproduces every body volume
+  within `1e-9`. The provenance extras carry the rod count and the ring
+  separation, so a reader of the file can see the cage the assembly is.
+- **Record**: `scpn.dense-plasma-focus-cad-model.v1` `1.0.0` with
+  canonical bytes, SHA-256 digest and fixed non-claims; one pinned
+  reference digest in the reference back-end environment (cadquery 2.8.0,
+  OCP 7.9.3.1) as an immutability fixture.
+- **Benchmark**: `benchmarks/device_model_cad.py` per the ecosystem
+  benchmark standard (build, export, facet and full record build);
+  results in `docs/benchmarks.md` and the committed local artefact
+  `benchmarks/results/device_model_cad.local.json`.
+
+Bounded claims — what is NOT claimed:
+
+- The bodies are exact analytic solids of a declared design built by a
+  pinned third-party kernel: not an engineering model, no compression
+  boundary, no manufacturing drawing; the plasma body is the declared
+  pinch column of the level-0 models, and the rods are straight cylinders
+  whose mounting hardware is not modelled.
+- Determinism of the STEP bytes is claimed within the pinned back-end
+  environment only; identity across OpenCASCADE or gmsh versions is not
+  claimed, and a back-end bump re-pins the record digest as a governed
+  data change.
+- No value describes, approximates or validates any real machine; the
+  anchor fixture reproduces printed dimensions and claims nothing beyond
+  that. The benchmark measures build, export and faceting cost, not
+  physics.
+- Maturity stays `computational_prototype`.

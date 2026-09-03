@@ -27,7 +27,9 @@ physics (design record ADR 0005, evidence record
 device 3D model (design records ADR 0007 and ADR 0008, evidence record
 `VALIDATION.md#device-3d-model`; owned domain
 `device_geometry_and_3d_model`, built on the geometry kernels of the pinned
-library). Every other
+library) and the device CAD model (design record ADR 0009, evidence record
+`VALIDATION.md#device-cad-model`; the same bodies as B-rep solids on the
+CAD kernels of the same pin). Every other
 section below describes boundaries and contracts. The claim inventory is
 empty; capability and claim inventories are generated and drift-checked.
 

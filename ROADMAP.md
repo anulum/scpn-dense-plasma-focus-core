@@ -64,8 +64,20 @@ this repository until it appears in the capability inventory with evidence.
   for bit against the library's native module and a standard-conformant
   benchmark; `computational_prototype` (ADR 0007,
   `VALIDATION.md#device-3d-model`, consumer contract
-  `docs/DEVICE_3D_MODEL_CONTRACT.md`). Follow-up under the same capability:
-  the tier-G2 B-rep model once the group's CAD kernels are public.
+  `docs/DEVICE_3D_MODEL_CONTRACT.md`).
+
+- **Device CAD model** (landed 2026-09-03) — the same bodies as exact
+  B-rep solids, the cathode built as one solid per rod on the centres the
+  tessellated model uses, with a canonical record, a normalised
+  deterministic STEP export and per-body fail-closed evidence: the
+  kernel's volume and area against the analytic closed forms within
+  `1e-9`, the faceted volume within the declared chord deficit bound, and
+  the faceted volume against the tier-G1 mesh within the exact polygon
+  deficit bound. The anchor fixture is exercised at this tier too, so
+  every dimension the filed source prints is proven to appear in the
+  solids. No bit-exact parity by design (third-party kernel);
+  `computational_prototype` (ADR 0009, `VALIDATION.md#device-cad-model`,
+  consumer contract `docs/DEVICE_3D_MODEL_CONTRACT.md`).
 
 ## Planned (no implementation exists; ordering is not a commitment)
 1. **Safety-envelope declaration** — machine-readable operational envelope

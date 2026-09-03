@@ -19,6 +19,11 @@
       "evidence_maturity": "computational_prototype",
       "evidence_pointer": "VALIDATION.md#device-3d-model",
       "identifier": "device_3d_model"
+    },
+    {
+      "evidence_maturity": "computational_prototype",
+      "evidence_pointer": "VALIDATION.md#device-cad-model",
+      "identifier": "device_cad_model"
     }
   ],
   "claims": [],
@@ -79,8 +84,13 @@
   },
   "kernel_library": {
     "distribution": "scpn-reactor-kernels",
-    "inventory_sha256": "74674c943b274fd81c9c576e2e0cd7d7aca546a4664ded313143d20cb51003e2",
+    "inventory_sha256": "e5754d8d68f0a03f91c612297ddfc227bc029af24303db51f511d7359f4eafa1",
     "kernels": [
+      "cad_brep_solids",
+      "cad_evidence",
+      "cad_faceting",
+      "cad_placement",
+      "cad_step_export",
       "geometry_exports",
       "geometry_mesh_contract",
       "geometry_placement",
@@ -88,7 +98,7 @@
       "geometry_unit_circle",
       "numerics_transcendental"
     ],
-    "source_commit": "1abb8ffbae6f2f324693dc5278976c875d5e440b",
+    "source_commit": "379b893908e2ce1d425e0284669a95337dbedf7b",
     "version": "0.1.0.dev0"
   },
   "license": "AGPL-3.0-or-later",

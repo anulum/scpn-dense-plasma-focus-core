@@ -25,6 +25,11 @@
       "evidence_maturity": "computational_prototype",
       "evidence_pointer": "VALIDATION.md#device-3d-model",
       "identifier": "device_3d_model"
+    },
+    {
+      "evidence_maturity": "computational_prototype",
+      "evidence_pointer": "VALIDATION.md#device-cad-model",
+      "identifier": "device_cad_model"
     }
   ],
   "configurations": [
@@ -66,7 +71,7 @@
     "manifest_path": "reactor-domain.json",
     "manifest_schema": "scpn.reactor-domain.v1",
     "manifest_schema_version": "1.0.0",
-    "manifest_sha256": "e84007d1caa1fe054bd7406d8d763011b5d4982f55c4dce7b384eb77b13a404e",
+    "manifest_sha256": "3b0e29a3831f9615a176dce52f7d3382a7d31a9f216849d58894d40825670baa",
     "repository": "SCPN-DENSE-PLASMA-FOCUS-CORE"
   },
   "spo_registry": {

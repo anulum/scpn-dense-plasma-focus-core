@@ -166,6 +166,11 @@ def test_manifest_declares_exact_configuration_assignment() -> None:
             "evidence_maturity": "computational_prototype",
             "evidence_pointer": "VALIDATION.md#device-3d-model",
         },
+        {
+            "identifier": "device_cad_model",
+            "evidence_maturity": "computational_prototype",
+            "evidence_pointer": "VALIDATION.md#device-cad-model",
+        },
     ]
     assert "analytic_device_physics_models" in manifest["owned_domains"]
     assert "device_geometry_and_3d_model" in manifest["owned_domains"]
@@ -182,7 +187,7 @@ def test_descriptor_and_inventory_embed_current_manifest_digest() -> None:
     assert descriptor["source"]["manifest_sha256"] == digest
     assert inventory["source"]["manifest_sha256"] == digest
     assert descriptor["lifecycle"]["state"] == "not_federated"
-    assert inventory["implemented_capability_count"] == 4
+    assert inventory["implemented_capability_count"] == 5
 
 
 def test_no_agent_state_trees_exist() -> None:
@@ -238,6 +243,11 @@ def test_kernel_library_pin_agrees_with_the_dependency_the_crate_and_the_package
     pin = manifest["kernel_library"]
     assert pin["distribution"] == "scpn-reactor-kernels"
     assert pin["kernels"] == [
+        "cad_brep_solids",
+        "cad_evidence",
+        "cad_faceting",
+        "cad_placement",
+        "cad_step_export",
         "geometry_exports",
         "geometry_mesh_contract",
         "geometry_placement",
@@ -247,7 +257,7 @@ def test_kernel_library_pin_agrees_with_the_dependency_the_crate_and_the_package
     ]
     project = tomllib.loads((REPO / "pyproject.toml").read_text(encoding="utf-8"))
     assert project["project"]["dependencies"] == [
-        "scpn-reactor-kernels @ git+https://github.com/anulum/"
+        "scpn-reactor-kernels[cad] @ git+https://github.com/anulum/"
         f"scpn-reactor-kernels.git@{pin['source_commit']}"
     ]
     assert scpn_reactor_kernels.__version__ == pin["version"]

@@ -17,9 +17,11 @@ The repository holds four implemented capabilities at
 the diagnostic and clock semantics model (ADR 0003), the level-0
 device physics (ADR 0005; the closed forms of the Lee model on the pinned
 shared numerics kernels, ADR 0006, with optional native kernels in
-`rust/`) and the device 3D model (ADR 0007 and ADR 0008; analytic bodies,
+`rust/`), the device 3D model (ADR 0007 and ADR 0008; analytic bodies,
 the rods of the squirrel-cage cathode included, tessellated and placed on
-the geometry kernels of the same pinned library), all in
+the geometry kernels of the same pinned library) and the device CAD model
+(ADR 0009; the same bodies as B-rep solids on the CAD kernels of the same
+pin, with a deterministic STEP export), all in
 `src/scpn_dense_plasma_focus_core/` —
 alongside the device boundary, its ecosystem contracts, and the validation
 tooling that enforces them.

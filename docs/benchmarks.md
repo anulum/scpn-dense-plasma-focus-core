@@ -69,6 +69,36 @@ P50 speed-up of the native kernels over the validated Python floor:
 26.7×. The fast row requires the optional native module of the pinned
 library and is never the default.
 
+## Device CAD model — local workstation (non-isolated)
+
+Artefact: `benchmarks/results/device_model_cad.local.json`
+(schema `scpn-dense-plasma-focus-core.device-model-cad-benchmark.v1`,
+generated 2026-09-03T12:01:21.831793+00:00, at parent commit
+`54502a10c74a` with the working tree of the landing commit). Host: 11th
+Gen Intel(R) Core(TM) i5-11600K @ 3.90GHz,
+Linux-7.0.0-30-generic-x86_64-with-glibc2.39, Python 3.12.3; back-ends
+cadquery 2.8.0, OCP 7.9.3.1; load average at start 6.39 (other work was
+running on the host); cores not isolated. Parameters: 2 warm-up runs, 10
+timed runs per operation; one declared eighteen-body device assembly
+(anode, insulator sleeve, twelve cathode rods, chamber wall, two closing
+walls, pinch column); faceting at linear deflection 0.0001 m and angular
+deflection 0.1 rad. There is no Python-floor row: the CAD kernels adapt
+pinned third-party code and carry no bit-exact floor by design (the
+library's ADR 0006).
+
+| Operation | P50 ms | P95 ms | mean ms | operations/s | status |
+|---|---|---|---|---|---|
+| `brep_build_and_manifest` | 27.56 | 31.30 | 28.09 | 36.3 | measured |
+| `step_export_normalised` | 12.37 | 14.59 | 12.65 | 80.8 | measured |
+| `facet_eighteen_bodies` | 150.54 | 310.35 | 165.04 | 6.6 | measured |
+| `device_cad_record_build` | 1369.69 | 1683.93 | 1445.13 | 0.7 | measured |
+
+This is the largest assembly in the group, and the rod cage is why: twelve
+of the eighteen bodies are rods. The record row is the whole capability in
+one call — the tier-G1 reference tessellation, the eighteen B-rep solids,
+the faceting, the per-body evidence and the normalised STEP export. It is
+a per-design cost, not a per-frame one.
+
 ## Fixed-runner (CI) number
 
 Not yet published: the hosted `rust` job runs a benchmark smoke that
@@ -83,6 +113,7 @@ is the local, non-isolated one above.
 make rust
 VIRTUAL_ENV=.venv PATH=.venv/bin:$PATH maturin develop --release -m rust/Cargo.toml
 .venv/bin/python benchmarks/level0_physics.py --points 100000 --warmup 3 --repeats 20 --label local
+.venv/bin/python benchmarks/device_model_cad.py --warmup 2 --repeats 10 --label local  # needs the cad extra
 ```
 
 The 3D-model rows need the pinned library's native module in addition to

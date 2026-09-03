@@ -9,16 +9,18 @@
 """Device capability models of the SCPN dense-plasma-focus family.
 
 Public surface of the ``device_configuration_model``,
-``diagnostic_clock_semantics``, ``level0_device_physics`` and
-``device_3d_model`` capabilities
+``diagnostic_clock_semantics``, ``level0_device_physics``,
+``device_3d_model`` and ``device_cad_model`` capabilities
 at ``computational_prototype`` maturity: validated parameter objects,
 synthetic diagnostic and clock declarations aligned with the pinned SPO
 observability catalogue, the closed forms of the Lee model evaluated on
 the validated configuration, documented consistency estimates, a validated
 device geometry with a deterministic tier-G1 3D model built on the pinned
-shared kernel library and open-format exports, canonical serialisation
-with SHA-256 digests, and data-only pins to the SPO registries. No claim
-about any real machine or diagnostic is made anywhere in this package.
+shared kernel library and open-format exports, the tier-G2 B-rep CAD model
+of the same design — cathode rod cage included — with a normalised
+deterministic STEP export, canonical serialisation with SHA-256 digests,
+and data-only pins to the SPO registries. No claim about any real machine
+or diagnostic is made anywhere in this package.
 """
 
 from __future__ import annotations
@@ -41,6 +43,12 @@ from scpn_dense_plasma_focus_core.errors import (
     NumericsError,
 )
 from scpn_dense_plasma_focus_core.geometry import (
+    CAD_MODEL_NON_CLAIMS,
+    CAD_MODEL_SCHEMA,
+    CAD_MODEL_SCHEMA_VERSION,
+    DEFAULT_ANGULAR_DEFLECTION_RAD,
+    DEFAULT_LINEAR_DEFLECTION_M,
+    DEFAULT_REFERENCE_MESH_SEGMENTS,
     GEOMETRY_FIELDS,
     MODEL_NON_CLAIMS,
     MODEL_SCHEMA,
@@ -48,7 +56,9 @@ from scpn_dense_plasma_focus_core.geometry import (
     MODEL_UNITS,
     DeviceGeometry,
     DeviceModel3D,
+    DeviceModelCAD,
     body_names,
+    build_device_cad,
     build_device_model,
     cathode_rod_names,
     geometry_from_bytes,
@@ -57,6 +67,7 @@ from scpn_dense_plasma_focus_core.geometry import (
     glb_extras,
     stl_bytes,
     write_glb,
+    write_step,
     write_stl,
 )
 from scpn_dense_plasma_focus_core.observability import (
@@ -99,7 +110,13 @@ __version__: Final = "0.1.0.dev0"
 
 __all__ = [
     "APPLICABLE_CANDIDATES",
+    "CAD_MODEL_NON_CLAIMS",
+    "CAD_MODEL_SCHEMA",
+    "CAD_MODEL_SCHEMA_VERSION",
     "CATALOGUE_BINDING",
+    "DEFAULT_ANGULAR_DEFLECTION_RAD",
+    "DEFAULT_LINEAR_DEFLECTION_M",
+    "DEFAULT_REFERENCE_MESH_SEGMENTS",
     "DEUTERIUM_DRIVE_WINDOW",
     "GEOMETRY_FIELDS",
     "LEVEL0_NON_CLAIMS",
@@ -122,6 +139,7 @@ __all__ = [
     "DeviceGeometry",
     "DeviceGeometryError",
     "DeviceModel3D",
+    "DeviceModelCAD",
     "DiagnosticChannelPlan",
     "DiagnosticPlan",
     "DiagnosticPlanError",
@@ -139,6 +157,7 @@ __all__ = [
     "SemanticCarrier",
     "__version__",
     "body_names",
+    "build_device_cad",
     "build_device_model",
     "cathode_rod_names",
     "configuration_from_bytes",
@@ -156,5 +175,6 @@ __all__ = [
     "stl_bytes",
     "verify_envelope",
     "write_glb",
+    "write_step",
     "write_stl",
 ]

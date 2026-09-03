@@ -32,6 +32,32 @@ SCPN Dense Plasma Focus Core — CHANGELOG
 
 ### Added
 
+- Device CAD model (`src/scpn_dense_plasma_focus_core/geometry/cad.py`),
+  the fifth implemented capability at `computational_prototype` (ADR
+  0009): the same bodies as exact B-rep solids, with the cathode built as
+  one solid per rod on the centres the tessellated model uses, so the two
+  tiers sit on one circle by construction. The `DeviceModelCAD` record
+  (`scpn.dense-plasma-focus-cad-model.v1`) carries both source digests,
+  the declared pinch column, the rod count, the declared deflections and
+  reference segment count, the back-end versions, the assembly manifest,
+  the STEP digest and the per-body evidence; `write_step` writes exactly
+  the digested bytes, and the STEP provenance carries the rod count and
+  the ring separation so a reader of the file can see the cage. The
+  per-body evidence is the shared library's, not this repository's. The
+  build runs the tier-G1 build first, so one set of invariants governs
+  both tiers — a rod set that would intersect itself is refused before any
+  solid exists. The anchor fixture is exercised at this tier too: the
+  anode radius and length, the cathode circle radius, the rod radius and
+  count and the sleeve length printed for the NX3 assembly A20Z160 are all
+  proven to appear in the built solids. The kernel-library pin moves to
+  the commit carrying the CAD group, its placement and body-evidence
+  kernels and its bounding-box correction, in the manifest, the
+  dependency (with the `cad` extra), the crate and the lock; the CI gains
+  a `cad` job that installs the system library the mesher's wheel links
+  against before the extra; manifest, descriptor, inventory and envelope
+  fixture regenerated; a standard-conformant benchmark with a committed
+  local artefact is added.
+
 - Device 3D model (`src/scpn_dense_plasma_focus_core/geometry/`), the fourth
   implemented capability at `computational_prototype` (ADR 0007, which amends
   ADR 0006, and ADR 0008): a validated `DeviceGeometry` of the Mather-type
