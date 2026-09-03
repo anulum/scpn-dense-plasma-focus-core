@@ -22,8 +22,17 @@ dynamic = ["version"]
 # kernel inventory are recorded in reactor-domain.json (kernel_library) and
 # a contract test proves the two pins agree.
 dependencies = [
-    "scpn-reactor-kernels[cad] @ git+https://github.com/anulum/scpn-reactor-kernels.git@379b893908e2ce1d425e0284669a95337dbedf7b",
+    "scpn-reactor-kernels @ git+https://github.com/anulum/scpn-reactor-kernels.git@379b893908e2ce1d425e0284669a95337dbedf7b",
 ]
+
+# The tier-G2 CAD model is an optional capability, not a runtime
+# requirement of this package: the device models, the physics and every
+# other capability work without a B-rep kernel. Declaring the library
+# extra as a hard dependency would overstate what this package needs and
+# would pull a ~1 GB back-end into every environment that installs it,
+# CI job included. It is an extra here too, naming the same commit.
+[project.optional-dependencies]
+cad = ["scpn-reactor-kernels[cad] @ git+https://github.com/anulum/scpn-reactor-kernels.git@379b893908e2ce1d425e0284669a95337dbedf7b"]
 
 [tool.setuptools.dynamic]
 version = { attr = "scpn_dense_plasma_focus_core.__version__" }

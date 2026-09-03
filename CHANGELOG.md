@@ -62,7 +62,11 @@ SCPN Dense Plasma Focus Core — CHANGELOG
   proven to appear in the built solids. The kernel-library pin moves to
   the commit carrying the CAD group, its placement and body-evidence
   kernels and its bounding-box correction, in the manifest, the
-  dependency (with the `cad` extra), the crate and the lock; the CI gains
+  dependency, the crate and the lock; the library's CAD back-end stays
+  optional — this package declares its own `cad` extra naming the same
+  commit, rather than making a roughly one-gigabyte B-rep kernel a hard
+  requirement of a package whose other four capabilities do not need it;
+  the CI gains
   a `cad` job that installs the system library the mesher's wheel links
   against before the extra; manifest, descriptor, inventory and envelope
   fixture regenerated; a standard-conformant benchmark with a committed

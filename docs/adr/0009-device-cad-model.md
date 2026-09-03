@@ -59,8 +59,16 @@ uses, and this record consumes it.
    reader of the exported file can see the cage the assembly is.
 6. The kernel library pin moves to the commit carrying the CAD group, the
    CAD placement kernel, the body-evidence kernel and the bounding-box
-   correction; the dependency gains the `cad` extra; the crate pin and the
-   lock move with it. The CI gains a `cad` job that installs the system
+   correction; the crate pin and the lock move with it. The library's `cad`
+   extra is NOT a dependency of this package: every other capability works
+   without a B-rep kernel, so declaring it as one would overstate what the
+   package needs and would pull a roughly one-gigabyte back-end into every
+   environment that installs it. It is an optional extra here too —
+   `[project.optional-dependencies] cad` naming the same commit — and only
+   the two CI jobs that need it install it: the coverage job, because the
+   CAD module is covered like every other module, and the `cad` job. A
+   contract test proves the plain dependency, the extra, the crate and the
+   lock all name one commit. The CI gains a `cad` job that installs the system
    library the mesher's wheel links against before the extra.
 7. The anchor fixture is exercised at this tier too: a test proves that
    the anode radius and length, the cathode circle radius, the rod radius

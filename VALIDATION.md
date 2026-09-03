@@ -403,8 +403,8 @@ the STEP surface of the consumer contract `docs/DEVICE_3D_MODEL_CONTRACT.md`).
 
 The B-rep, placement, STEP, faceting and body-evidence kernels are the
 shared library's `cad` group (`scpn-reactor-kernels` pinned in the
-manifest `kernel_library` block, in `pyproject.toml` with the `cad` extra
-and in the crate); their evidence is the library's, at its
+manifest `kernel_library` block, in the crate, and reachable through this
+package's own optional `cad` extra, which names the same commit); their evidence is the library's, at its
 `VALIDATION.md#cad-kernels`. What this repository exercises
 (`src/scpn_dense_plasma_focus_core/geometry/cad.py`,
 `tests/test_geometry_cad.py`):
