@@ -41,6 +41,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 from dataclasses import dataclass, field
 from typing import Any, Final
 
@@ -195,7 +196,7 @@ class DeviceModelCAD:
             ("linear_deflection_m", self.linear_deflection_m),
             ("angular_deflection_rad", self.angular_deflection_rad),
         ):
-            if not (value > 0.0) or value != value or value == float("inf"):
+            if not math.isfinite(value) or value <= 0.0:
                 raise DeviceGeometryError(
                     f"{name}: must be finite and strictly positive, got {value!r}"
                 )
