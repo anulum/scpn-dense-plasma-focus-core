@@ -30,22 +30,25 @@ jobs:
     uses: ./.github/workflows/reusable-tests.yml
     permissions:
       contents: read
+  security-audit:
+    name: Dependency and security audit
+    uses: ./.github/workflows/reusable-security-audit.yml
+    permissions:
+      contents: read
   gate:
     name: Required gate
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    needs: [static-policy, tests]
+    needs: [static-policy, tests, security-audit]
     if: always()
     permissions: {}
     steps:
       - name: Fail closed on any category result
+        shell: bash
         env:
           RESULTS: ${{ join(needs.*.result, ' ') }}
         run: |
-          for result in $RESULTS; do
-            echo "category result: $result"
-            if [ "$result" != "success" ]; then
-              echo "gate: category did not succeed; failing closed"
-              exit 1
-            fi
-          done
+          if [ "$RESULTS" != "success success success" ]; then
+            echo "gate: category results did not all succeed: $RESULTS"
+            exit 1
+          fi

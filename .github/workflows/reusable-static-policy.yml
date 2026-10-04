@@ -43,3 +43,5 @@ jobs:
         run: python tools/generate_capability_inventory.py --check
       - name: Workflow modularity guard
         run: python tools/audit_workflows.py
+      - name: Dependency audit command and gate policy
+        run: python tools/check_dependency_audits.py

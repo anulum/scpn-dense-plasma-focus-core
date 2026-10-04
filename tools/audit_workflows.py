@@ -39,6 +39,63 @@ COORDINATOR_TOP_KEYS: Final = frozenset(
     {"name", True, "permissions", "concurrency", "jobs"}
 )
 GATE_JOB: Final = "gate"
+REQUIRED_GATE_SCRIPT: Final = (
+    'if [ "$RESULTS" != "success success success" ]; then\n'
+    '  echo "gate: category results did not all succeed: $RESULTS"\n'
+    "  exit 1\n"
+    "fi\n"
+)
+
+
+def required_gate_errors(gate: object, category_jobs: set[str]) -> list[str]:
+    """Validate the entire required job, result binding and executed Bash block.
+
+    Parameters
+    ----------
+    gate
+        Parsed aggregate job from the maintained coordinator.
+    category_jobs
+        Every reusable category job that must succeed before acceptance.
+
+    Returns
+    -------
+    list[str]
+        Violations of the fixed three-category, unconditional gate contract.
+        Dependency ordering may differ; duplicate or omitted categories refuse.
+    """
+    if not isinstance(gate, dict):
+        return ["coordinator: aggregate gate job missing"]
+    normalised = dict(gate)
+    needs = gate.get("needs")
+    if isinstance(needs, list) and all(isinstance(name, str) for name in needs):
+        normalised["needs"] = sorted(needs)
+    errors: list[str] = []
+    if normalised.get("needs") != sorted(category_jobs):
+        errors.append("coordinator: gate must need every category call exactly once")
+    if gate.get("if") != "always()":
+        errors.append("coordinator: gate must run with if: always()")
+    expected = {
+        "name": "Required gate",
+        "runs-on": "ubuntu-latest",
+        "timeout-minutes": 5,
+        "needs": sorted(category_jobs),
+        "if": "always()",
+        "permissions": {},
+        "steps": [
+            {
+                "name": "Fail closed on any category result",
+                "shell": "bash",
+                "env": {"RESULTS": "${{ join(needs.*.result, ' ') }}"},
+                "run": REQUIRED_GATE_SCRIPT,
+            }
+        ],
+    }
+    if normalised != expected:
+        errors.append(
+            "coordinator: gate must fail closed on any non-success result; "
+            "exact job, step, result binding and script are required"
+        )
+    return errors
 
 
 def _entry_uses(job: dict[str, Any]) -> list[str]:
@@ -143,17 +200,7 @@ def _check_coordinator(
             f"coordinator: calls {sorted(called_files)} differ from "
             f"declared reusables {sorted(reusable_files)}"
         )
-    gate = jobs.get(GATE_JOB)
-    if not isinstance(gate, dict):
-        errors.append("coordinator: aggregate gate job missing")
-        return
-    if set(gate.get("needs") or []) != call_jobs:
-        errors.append("coordinator: gate must need every category call exactly once")
-    if str(gate.get("if", "")).strip() != "always()":
-        errors.append("coordinator: gate must run with if: always()")
-    script = json.dumps(gate.get("steps", []))
-    if "needs." not in script or "result" not in script or "exit 1" not in script:
-        errors.append("coordinator: gate must fail closed on any non-success result")
+    errors.extend(required_gate_errors(jobs.get(GATE_JOB), call_jobs))
 
 
 def audit(root: Path) -> list[str]:

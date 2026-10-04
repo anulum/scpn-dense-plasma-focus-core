@@ -280,7 +280,12 @@ def test_gate_must_exist(tmp_path: Path) -> None:
 def test_gate_needs_every_category(tmp_path: Path) -> None:
     """The gate must depend on every category call exactly once."""
     root = _tree(tmp_path)
-    _edit(root, "ci.yml", "    needs: [static-policy, tests]", "    needs: [tests]")
+    _edit(
+        root,
+        "ci.yml",
+        "    needs: [static-policy, tests, security-audit]",
+        "    needs: [tests]",
+    )
     errors = audit(root)
     assert any("gate must need every category call" in error for error in errors)
 
@@ -296,7 +301,7 @@ def test_gate_must_run_always(tmp_path: Path) -> None:
 def test_gate_script_must_fail_closed(tmp_path: Path) -> None:
     """The gate script must inspect results and exit non-zero on defect."""
     root = _tree(tmp_path)
-    _edit(root, "ci.yml", "              exit 1", "              true")
+    _edit(root, "ci.yml", "exit 1", "true")
     errors = audit(root)
     assert any("fail closed on any non-success result" in error for error in errors)
 

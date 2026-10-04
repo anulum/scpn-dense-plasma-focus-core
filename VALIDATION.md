@@ -36,7 +36,7 @@ Definitions are present in-repository; they run on the hosted platform
 only once a remote exists under separate owner authority.
 
 The hosted surface is modular: `ci.yml` is a coordinator that carries
-only trigger policy, two reusable-workflow calls, and one stable
+only trigger policy, three reusable-workflow calls, and one stable
 fail-closed `gate` job aggregating every category (failure,
 cancellation, and unexpected skips all fail the gate). Every job is
 declared and owned exactly once in the versioned inventory
@@ -50,7 +50,8 @@ verifies locally and in hosted CI.
 | `reusable-tests.yml` | tests with complete statement and branch coverage |
 | `pre-commit.yml` | exact pre-commit parity |
 | `codeql.yml` | Python code scanning |
-| `security-audit.yml` | secrets, dependency, licence, and workflow policy |
+| `reusable-security-audit.yml` | blocking dependency, secret, licence and workflow audits |
+| `security-audit.yml` | weekly and manual invocation of the shared security category |
 | `docs.yml` | strict documentation and link validation, no deployment |
 | `sbom.yml` | reproducible dependency inventory, no release |
 | `scorecard.yml` | read-only supply-chain analysis |
@@ -476,3 +477,25 @@ Bounded claims — what is NOT claimed:
   that. The benchmark measures build, export and faceting cost, not
   physics.
 - Maturity stays `computational_prototype`.
+
+
+## Blocking dependency audits
+
+Every push and pull request runs the reusable security audit through the CI
+coordinator. Its required aggregate gate depends on the security category
+and fails on every non-success result. The weekly/manual security workflow
+calls the same implementation. Python requirements and the committed Rust
+lock are audited without advisory filters or failure suppression. Python audit
+uses `pip-audit --strict` so incomplete dependency collection fails the audit.
+Rust audit tooling is pinned to cargo-audit 0.22.2 on Rust 1.98.0.
+
+`python tools/check_dependency_audits.py` verifies the tracked lock inventory,
+exact audit/install commands, unconditional execution and the complete
+aggregate job, step, result binding and Bash script. Both policy guards share
+the required-job contract and refuse overrides or extra steps. The script
+accepts only the three successful category results and rejects missing,
+failed, cancelled or skipped results. The same policy runs in static CI and
+pre-commit; the local hooks also check edits to the shared contract owner.
+Dedicated tests exercise both real CLIs and the actual Bash block with the
+maintained workflow tree and known invalid copies.
+A missing advisory database or failed audit cannot produce a successful gate.
