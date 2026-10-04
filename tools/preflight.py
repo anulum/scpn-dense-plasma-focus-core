@@ -33,7 +33,7 @@ from typing import Final
 MAP_RELATIVE_TO_MONOREPO: Final = Path(
     "agentic-shared/configs/scpn_reactor_family_repository_map.json"
 )
-MARKDOWN_LINK: Final = re.compile(r"\[[^\]]*\]\(([^)\s]+)\)")
+MARKDOWN_LINK: Final = re.compile(r"\[[^\]]*\]\((<[^>\n]+>|[^)\s<>]+)\)")
 EXTERNAL_TARGET: Final = re.compile(r"^(https?:|mailto:|#)")
 SKIPPED_DIRECTORIES: Final = frozenset({".git", ".venv", "__pycache__"})
 
@@ -114,7 +114,10 @@ def iter_markdown_files(root: Path) -> Iterable[Path]:
 
 
 def check_docs(root: Path) -> list[str]:
-    """Validate documentation encoding and relative link integrity.
+    """Validate documentation encoding and local link integrity.
+
+    CommonMark angle-bracket destinations may contain spaces. Their
+    delimiters are syntax, not part of the local path or external URI.
 
     Parameters
     ----------
@@ -137,6 +140,8 @@ def check_docs(root: Path) -> list[str]:
             continue
         for match in MARKDOWN_LINK.finditer(text):
             target = match.group(1)
+            if target.startswith("<"):
+                target = target[1:-1]
             if EXTERNAL_TARGET.match(target):
                 continue
             resolved = (path.parent / target.split("#", 1)[0]).resolve()

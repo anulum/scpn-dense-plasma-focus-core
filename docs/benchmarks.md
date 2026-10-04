@@ -25,20 +25,26 @@ region. Nothing here is a physics claim.
 
 Artefact: `benchmarks/results/level0_physics.local.json`
 (schema `scpn-dense-plasma-focus-core.level0-physics-benchmark.v1`,
-generated 2026-09-02T16:00:57.541139+00:00, at parent commit `7fb4af088204`
+generated 2026-10-04T11:45:48.324392+00:00, at parent commit `f0dc66504421`
 with the working tree of the landing commit).
 Host: 11th Gen Intel(R) Core(TM) i5-11600K @ 3.90GHz,
-Linux-7.0.0-30-generic-x86_64-with-glibc2.39, Python 3.12.3; load average at
-start 9.21 (other work was running on the host); cores not isolated (shared workstation, so treat the numbers as
-indicative). Parameters: 100000 points, 3 warm-up passes, 20 timed passes.
+Linux-7.0.0-34-generic-x86_64-with-glibc2.39, Python 3.12.3;
+Rust 1.98.0, PyO3 0.29.2, maturin 1.14.0. The process was restricted to
+shared cores 4 and 5, without isolating them from other work. The harness
+recorded load average 72.39 after measurement, despite the historical
+JSON field name `load_average_1min_at_start`. Parameters: 100000 points,
+3 warm-up passes, 20 timed passes. These heavily contended local samples
+do not establish a performance change against earlier runs.
 
 | Backend | P50 µs/point | P95 µs/point | P99 µs/point | mean µs/point | throughput points/s | status |
 |---|---|---|---|---|---|---|
-| `python_floor` (public API, always available) | 11.965 | 14.039 | 14.276 | 12.305 | 83580 | measured |
-| `rust_native` (optional build: `rust/`, maturin; fetches the pinned kernel crate) | 0.762 | 0.889 | 0.922 | 0.768 | 1313051 | measured |
+| `python_floor` (public API, always available) | 41.632 | 53.960 | 66.367 | 43.599 | 24020 | measured |
+| `rust_native` (optional build: `rust/`, maturin; fetches the pinned kernel crate) | 2.129 | 3.871 | 4.163 | 2.300 | 469637 | measured |
 
-P50 speed-up of the native call-through over the Python floor: 15.7×. The
-fast row requires the optional native module and is never the default.
+P50 ratio of Python-floor to native call-through latency in this run:
+19.55×. The native row requires the optional module and is never the
+default. This grid exercises pinch, beam and yield calculations; it does
+not time axial validation or establish its overhead.
 
 ## Device 3D model tessellation — local workstation (non-isolated)
 

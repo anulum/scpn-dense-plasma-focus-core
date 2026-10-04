@@ -100,3 +100,15 @@ shared kernel library's integrator and reactivity increments. The family's
 `manifest_sha256` inside the plan envelope, so the envelope fixture is
 regenerated from the public surface and re-pinned; the plan bytes and
 `plan_sha256` are unchanged.
+
+## Axial direct-call domain correction
+
+The direct axial API now enforces the coaxial ordering already enforced by
+bank normalisation. The logarithm is exactly the deterministic bank-derived
+`ln(b/a)`, consistent with Lee's definition of `c`; it is not independently
+fitted. Divisors, radicands and returned characteristics reject unrepresentable
+binary64 values. Rust returns `Result` and the binding maps its domain error
+to `ValueError`. Valid equations, evaluation order, tuple fields and complete
+published-row record identities remain unchanged. The
+[input/native contract](../LEVEL0_PHYSICS_CONTRACT.md) states the caller migration
+and evidence boundaries.

@@ -154,3 +154,11 @@ def test_pinch_state_consistency_is_enforced() -> None:
         level0_physics(configuration(), inputs(), pinch_state(pinch_current_a=2.0e6))
     with pytest.raises(DeviceConfigurationError, match="smaller than anode_radius_m"):
         level0_physics(configuration(), inputs(), pinch_state(pinch_radius_m=0.116))
+
+
+def test_composed_record_propagates_axial_representability_refusal() -> None:
+    """A valid positive model declaration cannot serialise an infinite axial result."""
+    with pytest.raises(DeviceConfigurationError, match="axial_mass_current_factor"):
+        level0_physics(
+            configuration(), inputs(axial_current_factor=1e-320), pinch_state()
+        )

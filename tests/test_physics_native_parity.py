@@ -16,10 +16,15 @@ present. Every parameter set is a fixture row of the source's table.
 
 from __future__ import annotations
 
+import math
+
 import pytest
+from test_physics_axial import REPRESENTABILITY_CASES, axial_arguments
 
 from physics_fixtures import ROWS, AnchorRow, bits, configuration, inputs, pinch_state
+from scpn_dense_plasma_focus_core.errors import DeviceConfigurationError
 from scpn_dense_plasma_focus_core.physics import (
+    axial_characteristics,
     beam_target_yield,
     level0_physics,
     scaling_law_yield,
@@ -182,3 +187,58 @@ def test_native_refusals_mirror_the_floor() -> None:
         scaling_law_yield(5.0e4)
     with pytest.raises(ValueError, match="smaller than cathode_radius_m"):
         beam_target_yield(1.0e23, 5.0e5, 0.05, 0.005, 0.005, 1.0e-30, 1.0e5)
+
+
+@pytest.mark.parametrize("field", tuple(axial_arguments()))
+@pytest.mark.parametrize("value", [0.0, -1.0, math.nan, math.inf, -math.inf])
+def test_native_axial_rejects_every_invalid_scalar(field: str, value: float) -> None:
+    """The actual PyO3 boundary mirrors every scalar domain refusal."""
+    arguments = axial_arguments()
+    arguments[field] = value
+    with pytest.raises(DeviceConfigurationError, match=field):
+        axial_characteristics(**arguments)
+    with pytest.raises(ValueError, match=field):
+        native.axial_characteristics(*arguments.values())
+
+
+@pytest.mark.parametrize(
+    ("updates", "field"),
+    [
+        ({"cathode_radius_m": 0.116}, "cathode_radius_m"),
+        ({"cathode_radius_m": 0.05}, "cathode_radius_m"),
+        ({"log_radius_ratio": 1.5}, "log_radius_ratio"),
+        *REPRESENTABILITY_CASES,
+    ],
+)
+def test_native_axial_mirrors_geometry_and_arithmetic_refusals(
+    updates: dict[str, float],
+    field: str,
+) -> None:
+    """Native direct calls refuse geometry and floating-point hazards by field."""
+    arguments = axial_arguments() | updates
+    with pytest.raises(DeviceConfigurationError, match=field):
+        axial_characteristics(**arguments)
+    with pytest.raises(ValueError, match=field):
+        native.axial_characteristics(*arguments.values())
+
+
+def test_native_axial_accepts_adjacent_ordered_radii_bit_exactly() -> None:
+    """The native boundary does not introduce a minimum representable gap."""
+    from scpn_dense_plasma_focus_core.physics.numerics import natural_log
+
+    arguments = axial_arguments()
+    arguments["cathode_radius_m"] = math.nextafter(
+        arguments["anode_radius_m"], math.inf
+    )
+    arguments["log_radius_ratio"] = natural_log(
+        arguments["cathode_radius_m"] / arguments["anode_radius_m"]
+    )
+    floor = axial_characteristics(**arguments)
+    assert [
+        bits(value) for value in native.axial_characteristics(*arguments.values())
+    ] == [
+        bits(floor.axial_transit_time_s),
+        bits(floor.alpha),
+        bits(floor.characteristic_axial_speed_m_s),
+        bits(floor.terminal_sheath_speed_m_s),
+    ]

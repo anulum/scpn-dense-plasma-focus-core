@@ -11,8 +11,9 @@
 //! axial and radial characteristic quantities, slug relations, the
 //! rule-of-thumb pinch geometry, the pinch-phase power terms, the fast ion
 //! beam chain and the neutron estimates. Input validation is the Python
-//! floor's responsibility; the kernels here assume admissible inputs
-//! except where a vendored kernel refuses (logarithm, power).
+//! floor's responsibility for the unchecked kernels. Axial characteristics
+//! validate direct native calls as well; other fallible kernels document
+//! their radius and transcendental refusals.
 
 use std::fmt;
 
@@ -174,52 +175,8 @@ pub fn fill_state(pressure_torr: f64, molecular_mass_amu: f64, temperature_k: f6
     }
 }
 
-/// Axial-phase characteristic quantities (Lee 2014, eqs. 5–7 and eq. 1 at rest).
-#[derive(Debug, Clone, Copy, PartialEq)]
-pub struct AxialCharacteristics {
-    /// `ta` of eq. (5).
-    pub axial_transit_time_s: f64,
-    /// `t0 / ta` of eq. (6).
-    pub alpha: f64,
-    /// `va = z0 / ta` of eq. (7).
-    pub characteristic_axial_speed_m_s: f64,
-    /// `v_inf` at the declared current (eq. 1 with zero acceleration).
-    pub terminal_sheath_speed_m_s: f64,
-}
-
-/// Axial characteristics, see the Python floor `axial.axial_characteristics`.
-#[must_use]
-#[allow(clippy::too_many_arguments)]
-pub fn axial_characteristics(
-    characteristic_time_s: f64,
-    characteristic_current_a: f64,
-    anode_radius_m: f64,
-    cathode_radius_m: f64,
-    anode_length_m: f64,
-    log_radius_ratio: f64,
-    mass_density_kg_m3: f64,
-    axial_mass_factor: f64,
-    axial_current_factor: f64,
-    drive_current_a: f64,
-) -> AxialCharacteristics {
-    let ratio = cathode_radius_m / anode_radius_m;
-    let geometry = (4.0 * PI * PI * (ratio * ratio - 1.0)) / (MU0 * log_radius_ratio);
-    let drive = (characteristic_current_a / anode_radius_m) / mass_density_kg_m3.sqrt();
-    let transit =
-        geometry.sqrt() * (axial_mass_factor.sqrt() / axial_current_factor) * anode_length_m
-            / drive;
-    let terminal = (((axial_current_factor * axial_current_factor) / axial_mass_factor)
-        * ((MU0 * log_radius_ratio)
-            / (4.0 * PI * PI * mass_density_kg_m3 * (ratio * ratio - 1.0))))
-        .sqrt()
-        * (drive_current_a / anode_radius_m);
-    AxialCharacteristics {
-        axial_transit_time_s: transit,
-        alpha: characteristic_time_s / transit,
-        characteristic_axial_speed_m_s: anode_length_m / transit,
-        terminal_sheath_speed_m_s: terminal,
-    }
-}
+/// Validated axial-phase quantities and public Lee-model evaluation.
+pub use crate::axial::{axial_characteristics, AxialCharacteristics};
 
 /// Radial-phase characteristic quantities (Lee 2014, eqs. 24–28).
 #[derive(Debug, Clone, Copy, PartialEq)]

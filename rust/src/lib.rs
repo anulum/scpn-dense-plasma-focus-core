@@ -19,6 +19,7 @@
 //! Nothing here integrates an equation and no value describes a real
 //! machine; the design record is ADR 0005 of the repository.
 
+mod axial;
 pub mod physics;
 
 pub use scpn_reactor_kernels_native::numerics::transcendental::NumericsError;
@@ -98,7 +99,7 @@ mod python {
         )
     }
 
-    /// Axial characteristics tuple, see `physics::axial_characteristics`.
+    /// Validated axial tuple; domain refusals become Python ValueError.
     #[pyfunction]
     #[allow(clippy::too_many_arguments)]
     fn axial_characteristics(
@@ -112,7 +113,7 @@ mod python {
         axial_mass_factor: f64,
         axial_current_factor: f64,
         drive_current_a: f64,
-    ) -> (f64, f64, f64, f64) {
+    ) -> PyResult<(f64, f64, f64, f64)> {
         let a = physics::axial_characteristics(
             characteristic_time_s,
             characteristic_current_a,
@@ -124,13 +125,14 @@ mod python {
             axial_mass_factor,
             axial_current_factor,
             drive_current_a,
-        );
-        (
+        )
+        .map_err(|e| PyValueError::new_err(e.to_string()))?;
+        Ok((
             a.axial_transit_time_s,
             a.alpha,
             a.characteristic_axial_speed_m_s,
             a.terminal_sheath_speed_m_s,
-        )
+        ))
     }
 
     /// Radial characteristics tuple, see `physics::radial_characteristics`.

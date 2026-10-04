@@ -37,7 +37,8 @@ and scaling-law neutron estimates) evaluated on the validated
 configuration and a declared pinch state, anchored to the printed table
 of twelve fitted machines, evaluated through the pinned shared numerics
 kernels of `scpn-reactor-kernels`, with optional native kernels proven
-bit-exact against the Python floor (ADR 0005 and ADR 0006, evidence:
+bit-exact against the Python floor (ADR 0005 and ADR 0006,
+[axial input/native contract](docs/LEVEL0_PHYSICS_CONTRACT.md), evidence:
 `VALIDATION.md#level-0-device-physics`); and the device 3D model — a
 validated mechanical envelope of the Mather-type layout and its analytic
 bodies — the anode, the insulator sleeve, every rod of the squirrel-cage

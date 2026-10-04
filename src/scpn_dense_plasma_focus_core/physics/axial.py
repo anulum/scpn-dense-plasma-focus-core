@@ -28,10 +28,11 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass
-from typing import Any
 
+from scpn_dense_plasma_focus_core.errors import DeviceConfigurationError
 from scpn_dense_plasma_focus_core.parameters import require_positive
 from scpn_dense_plasma_focus_core.physics.constants import MU0, PI
+from scpn_dense_plasma_focus_core.physics.numerics import natural_log
 
 
 @dataclass(frozen=True, slots=True)
@@ -58,12 +59,12 @@ class AxialCharacteristics:
     drive_current_a: float
     terminal_sheath_speed_m_s: float
 
-    def to_record(self) -> dict[str, Any]:
+    def to_record(self) -> dict[str, float]:
         """Project the characteristics to a JSON-serialisable record.
 
         Returns
         -------
-        dict[str, Any]
+        dict[str, float]
             Every field under its name.
         """
         return {
@@ -73,6 +74,60 @@ class AxialCharacteristics:
             "drive_current_a": self.drive_current_a,
             "terminal_sheath_speed_m_s": self.terminal_sheath_speed_m_s,
         }
+
+
+def _geometry_factors(
+    anode_radius_m: float,
+    cathode_radius_m: float,
+    log_radius_ratio: float,
+    mass_density_kg_m3: float,
+) -> tuple[float, float]:
+    """Evaluate the two geometry factors after checking the coaxial relation.
+
+    Parameters
+    ----------
+    anode_radius_m, cathode_radius_m
+        Positive electrode radii in metres, with the cathode outside the anode.
+    log_radius_ratio
+        Exact deterministic ``ln(b/a)`` returned by bank normalisation.
+    mass_density_kg_m3
+        Positive fill density in kilograms per cubic metre.
+
+    Returns
+    -------
+    tuple[float, float]
+        Transit radicand and the density-weighted terminal geometry factor.
+
+    Raises
+    ------
+    DeviceConfigurationError
+        If the relation is inconsistent or a factor is unrepresentable.
+    """
+    if cathode_radius_m <= anode_radius_m:
+        raise DeviceConfigurationError(
+            "cathode_radius_m: must be strictly greater than anode_radius_m, "
+            f"got {cathode_radius_m!r} <= {anode_radius_m!r}"
+        )
+    ratio = require_positive("radius_ratio", cathode_radius_m / anode_radius_m)
+    if log_radius_ratio != natural_log(ratio):
+        raise DeviceConfigurationError(
+            "log_radius_ratio: must equal deterministic ln(cathode_radius_m / "
+            "anode_radius_m) from bank_normalisation"
+        )
+    radius_difference = require_positive(
+        "radius_squared_ratio_minus_one", ratio * ratio - 1.0
+    )
+    magnetic_factor = require_positive("magnetic_log_factor", MU0 * log_radius_ratio)
+    geometry = require_positive(
+        "axial_geometry_factor", (4.0 * PI * PI * radius_difference) / magnetic_factor
+    )
+    denominator = require_positive(
+        "terminal_geometry_denominator",
+        4.0 * PI * PI * mass_density_kg_m3 * radius_difference,
+    )
+    return geometry, require_positive(
+        "terminal_geometry_factor", magnetic_factor / denominator
+    )
 
 
 def axial_characteristics(
@@ -98,11 +153,12 @@ def axial_characteristics(
     anode_radius_m
         ``a``; strictly positive.
     cathode_radius_m
-        ``b``; strictly positive (ordering is enforced by the caller).
+        ``b``; finite and strictly greater than ``anode_radius_m``.
     anode_length_m
         ``z0``; strictly positive.
     log_radius_ratio
-        ``ln(b / a)``; strictly positive.
+        Exact deterministic ``ln(b / a)`` from :func:`bank_normalisation`;
+        strictly positive and derived from the declared radii, not fitted.
     mass_density_kg_m3
         Fill mass density ``rho0``; strictly positive.
     axial_mass_factor
@@ -121,38 +177,58 @@ def axial_characteristics(
     Raises
     ------
     DeviceConfigurationError
-        If any input is non-finite or non-positive.
+        If an input is non-finite/non-positive, the coaxial or logarithmic
+        relation is inconsistent, or an intermediate/output cannot be
+        represented as a finite positive binary64 value. No value is clamped.
     """
-    require_positive("characteristic_time_s", characteristic_time_s)
-    require_positive("characteristic_current_a", characteristic_current_a)
-    require_positive("anode_radius_m", anode_radius_m)
-    require_positive("cathode_radius_m", cathode_radius_m)
-    require_positive("anode_length_m", anode_length_m)
-    require_positive("log_radius_ratio", log_radius_ratio)
-    require_positive("mass_density_kg_m3", mass_density_kg_m3)
-    require_positive("axial_mass_factor", axial_mass_factor)
-    require_positive("axial_current_factor", axial_current_factor)
-    require_positive("drive_current_a", drive_current_a)
-    ratio = cathode_radius_m / anode_radius_m
-    geometry = (4.0 * PI * PI * (ratio * ratio - 1.0)) / (MU0 * log_radius_ratio)
-    drive = (characteristic_current_a / anode_radius_m) / math.sqrt(mass_density_kg_m3)
-    transit = (
-        math.sqrt(geometry)
-        * (math.sqrt(axial_mass_factor) / axial_current_factor)
-        * anode_length_m
-        / drive
+    for name, value in (
+        ("characteristic_time_s", characteristic_time_s),
+        ("characteristic_current_a", characteristic_current_a),
+        ("anode_radius_m", anode_radius_m),
+        ("cathode_radius_m", cathode_radius_m),
+        ("anode_length_m", anode_length_m),
+        ("log_radius_ratio", log_radius_ratio),
+        ("mass_density_kg_m3", mass_density_kg_m3),
+        ("axial_mass_factor", axial_mass_factor),
+        ("axial_current_factor", axial_current_factor),
+        ("drive_current_a", drive_current_a),
+    ):
+        require_positive(name, value)
+    geometry, terminal_geometry = _geometry_factors(
+        anode_radius_m, cathode_radius_m, log_radius_ratio, mass_density_kg_m3
     )
-    terminal = math.sqrt(
-        ((axial_current_factor * axial_current_factor) / axial_mass_factor)
-        * (
-            (MU0 * log_radius_ratio)
-            / (4.0 * PI * PI * mass_density_kg_m3 * (ratio * ratio - 1.0))
-        )
-    ) * (drive_current_a / anode_radius_m)
+    current_per_radius = require_positive(
+        "characteristic_current_per_radius", characteristic_current_a / anode_radius_m
+    )
+    drive = require_positive(
+        "axial_drive", current_per_radius / math.sqrt(mass_density_kg_m3)
+    )
+    mass_current_factor = require_positive(
+        "axial_mass_current_factor", math.sqrt(axial_mass_factor) / axial_current_factor
+    )
+    transit = require_positive(
+        "axial_transit_time_s",
+        math.sqrt(geometry) * mass_current_factor * anode_length_m / drive,
+    )
+    current_mass_factor = require_positive(
+        "terminal_current_mass_factor",
+        (axial_current_factor * axial_current_factor) / axial_mass_factor,
+    )
+    terminal_radicand = require_positive(
+        "terminal_speed_squared_factor", current_mass_factor * terminal_geometry
+    )
+    drive_per_radius = require_positive(
+        "drive_current_per_radius", drive_current_a / anode_radius_m
+    )
+    terminal = require_positive(
+        "terminal_sheath_speed_m_s", math.sqrt(terminal_radicand) * drive_per_radius
+    )
     return AxialCharacteristics(
         axial_transit_time_s=transit,
-        alpha=characteristic_time_s / transit,
-        characteristic_axial_speed_m_s=anode_length_m / transit,
+        alpha=require_positive("alpha", characteristic_time_s / transit),
+        characteristic_axial_speed_m_s=require_positive(
+            "characteristic_axial_speed_m_s", anode_length_m / transit
+        ),
         drive_current_a=drive_current_a,
         terminal_sheath_speed_m_s=terminal,
     )

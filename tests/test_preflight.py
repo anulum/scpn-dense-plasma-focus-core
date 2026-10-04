@@ -149,11 +149,9 @@ def test_monorepo_map_path_finds_the_map_in_an_ancestor(tmp_path: Path) -> None:
     assert monorepo_map_path(repository) == map_file
 
 
-def test_monorepo_map_path_is_none_in_a_standalone_checkout(tmp_path: Path) -> None:
-    """A checkout with no ancestor map reports absence rather than guessing."""
-    repository = tmp_path / "standalone" / "REPO"
-    repository.mkdir(parents=True)
-    assert monorepo_map_path(repository) is None
+def test_monorepo_map_path_is_none_at_the_filesystem_boundary(tmp_path: Path) -> None:
+    """A root without ancestors reports absence even within a mapped host."""
+    assert monorepo_map_path(Path(tmp_path.anchor)) is None
 
 
 def test_gate_plan_carries_map_flag_when_an_ancestor_map_exists(
@@ -172,11 +170,9 @@ def test_gate_plan_carries_map_flag_when_an_ancestor_map_exists(
     assert str(map_file) in command
 
 
-def test_gate_plan_omits_map_flag_in_a_standalone_checkout(tmp_path: Path) -> None:
-    """Without a reachable map the validator gate carries no ``--map``."""
-    repository = tmp_path / "standalone" / "REPO"
-    repository.mkdir(parents=True)
-    command = dict(build_gate_plan(repository))["reactor-domain"]
+def test_gate_plan_omits_map_flag_at_the_filesystem_boundary(tmp_path: Path) -> None:
+    """An ancestor-free root does not borrow the current checkout's map."""
+    command = dict(build_gate_plan(Path(tmp_path.anchor)))["reactor-domain"]
     assert command is not None
     assert "--map" not in command
 
@@ -217,4 +213,46 @@ def test_run_gates_full_plan_fails_closed_without_toolchain(
 def test_main_runs_selected_gate(capsys: pytest.CaptureFixture[str]) -> None:
     """The command-line interface wires ``--root`` and ``--only``."""
     assert main(["--root", str(REPO), "--only", "docs"]) == 0
+    assert "preflight: PASS gates=1" in capsys.readouterr().out
+
+
+@pytest.mark.parametrize("absolute", [False, True])
+def test_docs_cli_accepts_angle_bracket_paths_with_spaces(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], *, absolute: bool
+) -> None:
+    """Valid relative/absolute destinations retain spaces and optional anchors."""
+    destination = tmp_path / "target with spaces.md"
+    destination.write_text("Target document\n", encoding="utf-8")
+    target = str(destination) if absolute else destination.name
+    (tmp_path / "README.md").write_text(
+        f"[target](<{target}#section>)\n", encoding="utf-8"
+    )
+    assert main(["--root", str(tmp_path), "--only", "docs"]) == 0
+    assert "preflight: PASS gates=1" in capsys.readouterr().out
+
+
+@pytest.mark.parametrize("absolute", [False, True])
+def test_docs_cli_refuses_missing_angle_bracket_paths_with_spaces(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], *, absolute: bool
+) -> None:
+    """A missing angled destination is checked rather than silently ignored."""
+    destination = tmp_path / "missing with spaces.md"
+    target = str(destination) if absolute else destination.name
+    (tmp_path / "README.md").write_text(f"[missing](<{target}>)\n", encoding="utf-8")
+    assert main(["--root", str(tmp_path), "--only", "docs"]) == 1
+    output = capsys.readouterr().out
+    assert "broken relative link" in output
+    assert "missing with spaces.md" in output
+    assert "preflight: FAIL gates_failed=1" in output
+
+
+@pytest.mark.parametrize(
+    "target", ["https://example.org", "mailto:a@example.org", "#top"]
+)
+def test_docs_cli_accepts_angle_bracket_external_destinations(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], target: str
+) -> None:
+    """URI and local-anchor syntax is recognised after removing angle delimiters."""
+    (tmp_path / "README.md").write_text(f"[external](<{target}>)\n", encoding="utf-8")
+    assert main(["--root", str(tmp_path), "--only", "docs"]) == 0
     assert "preflight: PASS gates=1" in capsys.readouterr().out

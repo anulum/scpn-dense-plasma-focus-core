@@ -27,7 +27,7 @@ followed by the evidence record of each implemented capability.
 | Licensing | `reuse lint` | REUSE 3.x compliance of the full tree |
 | Workflow lint | `actionlint` | all files under `.github/workflows/` |
 | Workflow modularity | `python3 tools/audit_workflows.py` | distributed workflow inventory: single ownership per job, coordinator/gate contract, action pinning, size ceilings |
-| Documentation | `python3 tools/preflight.py --only docs` | UTF-8 readability and relative-link integrity of every Markdown file |
+| Documentation | `python3 tools/preflight.py --only docs` | UTF-8 readability and local-link integrity of every Markdown file, including angle-bracket destinations with spaces |
 | Orchestrated | `python3 tools/preflight.py` | fail-closed run of all gates above |
 
 ## Workflow gates
@@ -55,18 +55,11 @@ verifies locally and in hosted CI.
 | `sbom.yml` | reproducible dependency inventory, no release |
 | `scorecard.yml` | read-only supply-chain analysis |
 
-## Shared ecosystem gate
-
-From the monorepo root:
-
-```bash
-python3 agentic-shared/scripts/repository_tier0_scaffold_audit.py \
-  03_CODE/SCPN-DENSE-PLASMA-FOCUS-CORE --json
-```
-
-proves the Tier-0 local-scaffold machine profile (required and forbidden
-paths, Git/remote boundary, workflow pins and permissions, badge non-claims,
-JSON integrity, defensive ignore rules).
+The documentation gate checks both relative and absolute local destinations.
+Angle delimiters are removed before URI recognition and file resolution;
+missing files still fail the gate. Dedicated tests exercise the real command
+interface with existing and missing destinations, spaces and fragments.
+This is an inline-link check, not a complete CommonMark parser.
 
 ## Device configuration model
 
@@ -123,7 +116,12 @@ What is exercised, all under the 100 % statement-and-branch coverage gate
   speed at a declared current. Anchor: the terminal speed at the peak
   current against the `peak va` column of the four rows within 15 %; it
   overestimates every row by 7–14 % and the tests assert that sign, so the
-  deviation is evidence, not noise.
+  deviation is evidence, not noise. Both direct public implementations
+  reject equal/reversed electrodes and require the exact bank-derived
+  logarithm. Finite-input overflow/underflow, every invalid scalar and
+  composed-record propagation are exercised through the actual Python,
+  Rust and PyO3 entry points; representable adjacent radii remain accepted.
+  See the [input/native contract](docs/LEVEL0_PHYSICS_CONTRACT.md).
 - **Radial characteristics, slug relations, rule-of-thumb geometry**
   (`radial.py`; eqs. 14, 15, 24–28, 32, 34; ICTP Tables 2–3): closed forms
   against their definitions to `1e-14`; the eq. (28) ratio at `c = 3.4`
