@@ -22,9 +22,22 @@ from audit_workflows import required_gate_errors
 LOCK_PATH: Final = re.compile(
     r"(?:^|/)(?:[^/]+\.lock|[^/]*lock[^/]*\.(?:json|yaml|toml)|requirements[^/]*\.txt)$"
 )
-LOCKS: Final = frozenset({"requirements-dev.txt", "rust/Cargo.lock"})
+# The kernel-library lock pins first-party source by archive digest; it is not
+# a PyPI distribution, so the PyPI audit below covers every third-party lock.
+LOCKS: Final = frozenset(
+    {
+        "requirements-dev.txt",
+        "requirements-cad.txt",
+        "requirements-audit.txt",
+        "requirements-kernels.txt",
+        "rust/Cargo.lock",
+    }
+)
 AUDITS: Final = {
-    "Dependency vulnerability audit": "pip-audit --strict -r requirements-dev.txt",
+    "Dependency vulnerability audit": (
+        "pip-audit --strict --disable-pip -r requirements-dev.txt "
+        "-r requirements-cad.txt -r requirements-audit.txt"
+    ),
     "Rust dependency vulnerability audit": "cargo +1.98.0 audit --file rust/Cargo.lock",
     "Install pinned Rust audit tooling": (
         "rustup toolchain install 1.98.0 --profile minimal\n"

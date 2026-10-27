@@ -277,9 +277,9 @@ def test_kernel_library_pin_agrees_with_the_dependency_the_crate_and_the_package
     assert f"#{pin['source_commit']}" in lock
     workflows = REPO / ".github" / "workflows"
     for name in ("reusable-static-policy.yml", "reusable-tests.yml", "pre-commit.yml"):
-        assert "pip install -e ." in (workflows / name).read_text(encoding="utf-8"), (
-            name
-        )
+        assert "pip install --no-deps -e ." in (workflows / name).read_text(
+            encoding="utf-8"
+        ), name
     assert {
         "domain": "shared_physics_geometry_and_numerics_kernels",
         "owner": "SCPN-REACTOR-KERNELS",

@@ -22,6 +22,13 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
 from check_dependency_audits import main
 
 REPO = Path(__file__).resolve().parents[1]
+LOCK_FILES = (
+    "requirements-dev.txt",
+    "requirements-cad.txt",
+    "requirements-audit.txt",
+    "requirements-kernels.txt",
+    "rust/Cargo.lock",
+)
 
 
 def repository(tmp_path: Path) -> Path:
@@ -41,7 +48,7 @@ def repository(tmp_path: Path) -> Path:
     root.mkdir()
     shutil.copytree(REPO / ".github", root / ".github")
     (root / "rust").mkdir()
-    for name in ("requirements-dev.txt", "rust/Cargo.lock"):
+    for name in LOCK_FILES:
         shutil.copyfile(REPO / name, root / name)
     subprocess.run(
         ["/usr/bin/git", "init", "-q", "--initial-branch=main"], cwd=root, check=True
@@ -53,6 +60,9 @@ def repository(tmp_path: Path) -> Path:
             "--",
             ".github",
             "requirements-dev.txt",
+            "requirements-cad.txt",
+            "requirements-audit.txt",
+            "requirements-kernels.txt",
             "rust/Cargo.lock",
         ],
         cwd=root,
@@ -99,14 +109,11 @@ def test_actual_policy_is_accepted(
         ("reusable-security-audit.yml", "jobs:\n", "env:\n  AUDIT: advisory\njobs:\n"),
         (
             "reusable-security-audit.yml",
-            "pip-audit --strict -r requirements-dev.txt",
-            "pip-audit --strict -r requirements-dev.txt || true",
+            "-r requirements-cad.txt -r requirements-audit.txt\n",
+            "-r requirements-cad.txt -r requirements-audit.txt || true\n",
         ),
-        (
-            "reusable-security-audit.yml",
-            "pip-audit --strict -r requirements-dev.txt",
-            "pip-audit -r requirements-dev.txt",
-        ),
+        ("reusable-security-audit.yml", "pip-audit --strict ", "pip-audit "),
+        ("reusable-security-audit.yml", " -r requirements-cad.txt", ""),
         (
             "reusable-security-audit.yml",
             "cargo +1.98.0 audit --file rust/Cargo.lock",
