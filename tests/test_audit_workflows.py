@@ -283,8 +283,8 @@ def test_gate_needs_every_category(tmp_path: Path) -> None:
     _edit(
         root,
         "ci.yml",
-        "    needs: [static-policy, tests, security-audit]",
-        "    needs: [tests]",
+        "    needs: [static-policy, tests, security-audit, package]",
+        "    needs: [tests, package]",
     )
     errors = audit(root)
     assert any("gate must need every category call" in error for error in errors)

@@ -40,7 +40,7 @@ COORDINATOR_TOP_KEYS: Final = frozenset(
 )
 GATE_JOB: Final = "gate"
 REQUIRED_GATE_SCRIPT: Final = (
-    'if [ "$RESULTS" != "success success success" ]; then\n'
+    'if [ "$RESULTS" != "success success success success" ]; then\n'
     '  echo "gate: category results did not all succeed: $RESULTS"\n'
     "  exit 1\n"
     "fi\n"
@@ -60,7 +60,7 @@ def required_gate_errors(gate: object, category_jobs: set[str]) -> list[str]:
     Returns
     -------
     list[str]
-        Violations of the fixed three-category, unconditional gate contract.
+        Violations of the fixed four-category, unconditional gate contract.
         Dependency ordering may differ; duplicate or omitted categories refuse.
     """
     if not isinstance(gate, dict):

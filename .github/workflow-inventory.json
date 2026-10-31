@@ -12,7 +12,6 @@
     "max_bytes": 102400
   },
   "omitted_categories": [
-    3,
     5,
     6,
     7,
@@ -28,6 +27,7 @@
         "static-policy",
         "tests",
         "security-audit",
+        "package",
         "gate"
       ],
       "owner": "coordinator and stable required gate"
@@ -51,6 +51,15 @@
         "cad"
       ],
       "owner": "unit, component, scientific quality, native parity and benchmark smoke"
+    },
+    {
+      "file": "reusable-package.yml",
+      "kind": "reusable",
+      "category": 3,
+      "jobs": [
+        "run"
+      ],
+      "owner": "build and installed-wheel verification"
     },
     {
       "file": "pre-commit.yml",

@@ -26,6 +26,7 @@ LOCK_FILES = (
     "requirements-dev.txt",
     "requirements-cad.txt",
     "requirements-audit.txt",
+    "requirements-build.txt",
     "requirements-kernels.txt",
     "rust/Cargo.lock",
 )
@@ -62,6 +63,7 @@ def repository(tmp_path: Path) -> Path:
             "requirements-dev.txt",
             "requirements-cad.txt",
             "requirements-audit.txt",
+            "requirements-build.txt",
             "requirements-kernels.txt",
             "rust/Cargo.lock",
         ],
@@ -92,10 +94,18 @@ def test_actual_policy_is_accepted(
         ("ci.yml", "  push:", "  push:\n    paths: [rust/**]"),
         ("ci.yml", "  push:", "  workflow_call:"),
         ("ci.yml", "  security-audit:\n", "  security-audit:\n    if: false\n"),
-        ("ci.yml", "static-policy, tests, security-audit", "static-policy, tests"),
+        (
+            "ci.yml",
+            "static-policy, tests, security-audit, package",
+            "static-policy, tests, package",
+        ),
         ("ci.yml", "if: always()", "if: success()"),
         ("ci.yml", "exit 1", "exit 0"),
-        ("ci.yml", "needs: [static-policy, tests, security-audit]", "needs: [null]"),
+        (
+            "ci.yml",
+            "needs: [static-policy, tests, security-audit, package]",
+            "needs: [null]",
+        ),
         (
             "ci.yml",
             "permissions: {}\n",
@@ -109,8 +119,8 @@ def test_actual_policy_is_accepted(
         ("reusable-security-audit.yml", "jobs:\n", "env:\n  AUDIT: advisory\njobs:\n"),
         (
             "reusable-security-audit.yml",
-            "-r requirements-cad.txt -r requirements-audit.txt\n",
-            "-r requirements-cad.txt -r requirements-audit.txt || true\n",
+            "-r requirements-audit.txt -r requirements-build.txt\n",
+            "-r requirements-audit.txt -r requirements-build.txt || true\n",
         ),
         ("reusable-security-audit.yml", "pip-audit --strict ", "pip-audit "),
         ("reusable-security-audit.yml", " -r requirements-cad.txt", ""),
@@ -211,13 +221,13 @@ def test_malformed_or_missing_trigger_mapping_is_refused(
         ),
         (
             "RESULTS: ${{ join(needs.*.result, ' ') }}",
-            "RESULTS: 'success success success'",
+            "RESULTS: 'success success success success'",
         ),
         ("RESULTS: ${{", "OMITTED_RESULTS: ${{"),
         ("        run: |\n", "        run: |\n          RESULTS=success\n"),
         (
             "        run: |\n",
-            "        run: |\n          RESULTS='success success success'\n",
+            "        run: |\n          RESULTS='success success success success'\n",
         ),
         ("        run: |\n", "        run: |\n          exit 0\n"),
         (
@@ -225,11 +235,11 @@ def test_malformed_or_missing_trigger_mapping_is_refused(
             "    steps:\n      - run: echo 'unreviewed extra gate step'\n",
         ),
         (
-            "static-policy, tests, security-audit]",
-            "static-policy, tests, security-audit, tests]",
+            "static-policy, tests, security-audit, package]",
+            "static-policy, tests, security-audit, package, tests]",
         ),
-        ("needs: [static-policy, tests, security-audit]", "needs: null"),
-        ("needs: [static-policy, tests, security-audit]", "needs: [null]"),
+        ("needs: [static-policy, tests, security-audit, package]", "needs: null"),
+        ("needs: [static-policy, tests, security-audit, package]", "needs: [null]"),
         ("shell: bash", "shell: sh"),
         (
             "permissions: {}\n",
@@ -283,7 +293,7 @@ def test_both_clis_refuse_a_script_that_forces_shell_success(tmp_path: Path) -> 
     path.write_text(
         text.replace(
             "        run: |\n",
-            "        run: |\n          RESULTS='success success success'\n",
+            "        run: |\n          RESULTS='success success success success'\n",
             1,
         )
     )
@@ -321,13 +331,13 @@ def test_both_clis_refuse_a_script_that_forces_shell_success(tmp_path: Path) -> 
 def test_guard_accepts_dependency_order_without_losing_categories(
     tmp_path: Path,
 ) -> None:
-    """An equivalent result ordering keeps all three required categories."""
+    """An equivalent result ordering keeps all four required categories."""
     root = repository(tmp_path)
     path = root / ".github/workflows/ci.yml"
     path.write_text(
         path.read_text().replace(
-            "static-policy, tests, security-audit]",
-            "security-audit, tests, static-policy]",
+            "static-policy, tests, security-audit, package]",
+            "package, security-audit, tests, static-policy]",
         )
     )
     assert main([str(root)]) == 0
@@ -336,19 +346,20 @@ def test_guard_accepts_dependency_order_without_losing_categories(
 @pytest.mark.parametrize(
     ("results", "expected"),
     [
-        ("success success success", 0),
-        ("failure success success", 1),
-        ("success failure success", 1),
-        ("success success failure", 1),
-        ("success cancelled success", 1),
-        ("success skipped success", 1),
-        ("success neutral success", 1),
-        ("success unknown success", 1),
-        ("success success", 1),
-        ("success success success success", 1),
+        ("success success success success", 0),
+        ("failure success success success", 1),
+        ("success failure success success", 1),
+        ("success success failure success", 1),
+        ("success success success failure", 1),
+        ("success cancelled success success", 1),
+        ("success skipped success success", 1),
+        ("success neutral success success", 1),
+        ("success unknown success success", 1),
+        ("success success success", 1),
+        ("success success success success success", 1),
         ("", 1),
         ("   ", 1),
-        ("success success success\nfailure", 1),
+        ("success success success success\nfailure", 1),
     ],
 )
 def test_actual_bash_gate_requires_every_category_success(

@@ -29,6 +29,7 @@ LOCKS: Final = frozenset(
         "requirements-dev.txt",
         "requirements-cad.txt",
         "requirements-audit.txt",
+        "requirements-build.txt",
         "requirements-kernels.txt",
         "rust/Cargo.lock",
     }
@@ -36,7 +37,7 @@ LOCKS: Final = frozenset(
 AUDITS: Final = {
     "Dependency vulnerability audit": (
         "pip-audit --strict --disable-pip -r requirements-dev.txt "
-        "-r requirements-cad.txt -r requirements-audit.txt"
+        "-r requirements-cad.txt -r requirements-audit.txt -r requirements-build.txt"
     ),
     "Rust dependency vulnerability audit": "cargo +1.98.0 audit --file rust/Cargo.lock",
     "Install pinned Rust audit tooling": (

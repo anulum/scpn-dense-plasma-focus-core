@@ -35,11 +35,16 @@ jobs:
     uses: ./.github/workflows/reusable-security-audit.yml
     permissions:
       contents: read
+  package:
+    name: Installed wheel
+    uses: ./.github/workflows/reusable-package.yml
+    permissions:
+      contents: read
   gate:
     name: Required gate
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    needs: [static-policy, tests, security-audit]
+    needs: [static-policy, tests, security-audit, package]
     if: always()
     permissions: {}
     steps:
@@ -48,7 +53,7 @@ jobs:
         env:
           RESULTS: ${{ join(needs.*.result, ' ') }}
         run: |
-          if [ "$RESULTS" != "success success success" ]; then
+          if [ "$RESULTS" != "success success success success" ]; then
             echo "gate: category results did not all succeed: $RESULTS"
             exit 1
           fi

@@ -28,6 +28,7 @@ followed by the evidence record of each implemented capability.
 | Workflow lint | `actionlint` | all files under `.github/workflows/` |
 | Workflow modularity | `python3 tools/audit_workflows.py` | distributed workflow inventory: single ownership per job, coordinator/gate contract, action pinning, size ceilings |
 | Dependency-audit binding | `python3 tools/check_dependency_audits.py` | tracked lock inventory, exact audit and install commands, unconditional required execution |
+| Installed wheel (CI only) | `python -I tools/installed_package_check.py --mode base|cad --checkout <checkout>` in clean environments holding the built wheel with the kernel library (base) or with the CAD extra (cad) | package imported from site-packages, `py.typed` shipped, metadata version and kernel requirement, configuration and geometry round trip, deterministic level-0 record (anchor row) and device model; base must raise `CadUnavailableError` for a CAD request, cad must build a STEP model |
 | Documentation | `python3 tools/preflight.py --only docs` | UTF-8 readability and local-link integrity of every Markdown file, including angle-bracket destinations with spaces |
 | Orchestrated | `python3 tools/preflight.py` | fail-closed run of all gates above |
 
@@ -49,6 +50,7 @@ verifies locally and in hosted CI.
 | `ci.yml` | coordinator and stable required gate |
 | `reusable-static-policy.yml` | lint, format, typing, domain policy, workflow guard |
 | `reusable-tests.yml` | tests with complete statement and branch coverage |
+| `reusable-package.yml` | wheel build and installed-wheel checks in clean base and CAD environments |
 | `pre-commit.yml` | exact pre-commit parity |
 | `codeql.yml` | Python code scanning |
 | `reusable-security-audit.yml` | blocking dependency, secret, licence and workflow audits |
@@ -494,7 +496,7 @@ Rust audit tooling is pinned to cargo-audit 0.22.2 on Rust 1.98.0.
 exact audit/install commands, unconditional execution and the complete
 aggregate job, step, result binding and Bash script. Both policy guards share
 the required-job contract and refuse overrides or extra steps. The script
-accepts only the three successful category results and rejects missing,
+accepts only the four successful category results and rejects missing,
 failed, cancelled or skipped results. The same policy runs in static CI,
 pre-commit, `make validate` and the preflight plan; the local hooks also check edits to the shared contract owner.
 Dedicated tests exercise both real CLIs and the actual Bash block with the

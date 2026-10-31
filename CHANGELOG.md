@@ -23,6 +23,21 @@ SCPN Dense Plasma Focus Core — CHANGELOG
   them. Property and fuzz tests cover arbitrary bytes, single-byte
   mutations, field substitutions and overflowing number literals.
 
+### Fixed
+
+- `build_device_cad` raises `CadUnavailableError` when the optional CAD
+  back-end is missing, as documented; it previously re-raised it as
+  `DeviceGeometryError`.
+
+### Added
+
+- An installed-wheel job in the required CI gate: the wheel is built
+  without build isolation from hash-locked `setuptools` and `wheel`
+  (`requirements-build.txt`), installed into clean base and CAD environments
+  and exercised from outside the checkout by `tools/installed_package_check.py`.
+  The aggregate gate now requires four category results, and the build lock
+  joins the blocking dependency audit and its policy check.
+
 ### Changed
 
 - The documentation gate reads only files git would publish, so a
