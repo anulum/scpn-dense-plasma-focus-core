@@ -19,7 +19,7 @@ followed by the evidence record of each implemented capability.
 |---|---|---|
 | Lint | `ruff check .` | all Python under `src/`, `tools/`, and `tests/` |
 | Format | `ruff format --check .` | same scope |
-| Typing | `mypy --strict src tools tests` | zero errors, strict mode |
+| Typing | `mypy --strict src tools tests benchmarks conftest.py` | zero errors, strict mode |
 | Tests + coverage | `pytest -q --cov=src --cov=tools --cov-branch --cov-fail-under=100` | 100 % statement and branch coverage of `src/` and `tools/` |
 | Domain manifest | `python3 tools/validate_reactor_domain.py reactor-domain.json` | schema, registry version/digest, exact configuration set, capability inventory shape and ceiling rule, safety boundary |
 | Studio descriptor | `python3 tools/derive_studio_descriptor.py --check` | committed descriptor byte-identical to a fresh derivation |
@@ -27,6 +27,7 @@ followed by the evidence record of each implemented capability.
 | Licensing | `reuse lint` | REUSE 3.x compliance of the full tree |
 | Workflow lint | `actionlint` | all files under `.github/workflows/` |
 | Workflow modularity | `python3 tools/audit_workflows.py` | distributed workflow inventory: single ownership per job, coordinator/gate contract, action pinning, size ceilings |
+| Dependency-audit binding | `python3 tools/check_dependency_audits.py` | tracked lock inventory, exact audit and install commands, unconditional required execution |
 | Documentation | `python3 tools/preflight.py --only docs` | UTF-8 readability and local-link integrity of every Markdown file, including angle-bracket destinations with spaces |
 | Orchestrated | `python3 tools/preflight.py` | fail-closed run of all gates above |
 
@@ -494,8 +495,8 @@ exact audit/install commands, unconditional execution and the complete
 aggregate job, step, result binding and Bash script. Both policy guards share
 the required-job contract and refuse overrides or extra steps. The script
 accepts only the three successful category results and rejects missing,
-failed, cancelled or skipped results. The same policy runs in static CI and
-pre-commit; the local hooks also check edits to the shared contract owner.
+failed, cancelled or skipped results. The same policy runs in static CI,
+pre-commit, `make validate` and the preflight plan; the local hooks also check edits to the shared contract owner.
 Dedicated tests exercise both real CLIs and the actual Bash block with the
 maintained workflow tree and known invalid copies.
 A missing advisory database or failed audit cannot produce a successful gate.

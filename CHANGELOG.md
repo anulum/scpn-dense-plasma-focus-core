@@ -25,6 +25,15 @@ SCPN Dense Plasma Focus Core — CHANGELOG
 
 ### Changed
 
+- Local and hosted gates check the same cohorts: `conftest.py` joins the
+  typed cohort everywhere, VALIDATION names the full typed cohort (it
+  omitted `benchmarks/`, which CI already checks), and `make validate` and
+  the preflight plan run the workflow audit and the dependency-audit binding
+  check CI runs. A parity test binds the make targets and the preflight plan
+  to the hosted workflows, and an enrollment test maps every tracked file —
+  including the native crate with its integration tests and the benchmarks —
+  to exactly one gated surface.
+
 - Install every CI dependency from hash-locked requirement sets with
   `--require-hashes`: the development toolchain, the CAD extra, the audit
   and inventory tools, and the first-party kernel library by source-archive

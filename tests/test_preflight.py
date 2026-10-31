@@ -124,6 +124,7 @@ def test_gate_plan_covers_every_validation_surface(tmp_path: Path) -> None:
         "reuse",
         "actionlint",
         "workflows",
+        "dependency-audits",
         "docs",
     ]
 

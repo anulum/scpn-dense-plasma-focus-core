@@ -213,7 +213,15 @@ def build_gate_plan(root: Path) -> list[tuple[str, list[str] | None]]:
         ("ruff-format", [str(bin_dir / "ruff"), "format", "--check", "."]),
         (
             "mypy",
-            [str(bin_dir / "mypy"), "--strict", "src", "tools", "tests", "benchmarks"],
+            [
+                str(bin_dir / "mypy"),
+                "--strict",
+                "src",
+                "tools",
+                "tests",
+                "benchmarks",
+                "conftest.py",
+            ],
         ),
         (
             "tests",
@@ -235,6 +243,7 @@ def build_gate_plan(root: Path) -> list[tuple[str, list[str] | None]]:
         ("reuse", [str(bin_dir / "reuse"), "lint"]),
         ("actionlint", ["actionlint"]),
         ("workflows", [python, "tools/audit_workflows.py"]),
+        ("dependency-audits", [python, "tools/check_dependency_audits.py"]),
         ("docs", None),
     ]
 
