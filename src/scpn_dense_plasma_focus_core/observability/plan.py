@@ -371,9 +371,9 @@ class DiagnosticPlan:
                         message=(
                             "declared instability band "
                             f"{channel.max_signal_frequency_hz:.1f} "
-                            "Hz is outside the m=0 necking and "
-                            "pinch-phase scale 1-1000 MHz "
-                            "(Lee and Serban 1996)"
+                            "Hz is outside the declared m=0 necking "
+                            "design band 1-1000 MHz (synthetic; not "
+                            "checked against a source on file)"
                         ),
                     )
                 )
@@ -387,9 +387,9 @@ class DiagnosticPlan:
                         field=f"channels[{channel.identifier}].timing_uncertainty_s",
                         message=(
                             f"timing uncertainty {channel.timing_uncertainty_s:.2e} s"
-                            " is coarser than the ns-scale "
-                            "rundown-to-pinch timing "
-                            "(Lee and Serban 1996)"
+                            " is coarser than the declared 10 ns "
+                            "event-timing design bound (synthetic; not "
+                            "checked against a source on file)"
                         ),
                     )
                 )
@@ -400,8 +400,8 @@ class DiagnosticPlan:
                         message=(
                             "acquisition window "
                             f"{channel.acquisition_duration_s:.2e} s is "
-                            "longer than the plasma-focus discharge scale of up "
-                            "to ~100 us (Lee and Serban 1996)"
+                            "longer than the declared ~100 us discharge-duration "
+                            "bound (synthetic; not checked against a source on file)"
                         ),
                     )
                 )

@@ -49,7 +49,11 @@ bind. Three candidates apply to the configuration this repository owns: `self_ma
 4. Timing is fail-closed where physics fixes the bound: the Nyquist
    criterion for cyclic channels, a positive event-timing bound, and
    clock resolution at or below that bound. The device-typical checks
-   are advisory only: the m=0 necking and pinch-phase scale 1–1000 MHz and the ns-scale rundown-to-pinch timing (S. Lee, A. Serban, IEEE Trans. Plasma Sci. 24 (1996) 1101).
+   are advisory only and compare against declared synthetic design bounds:
+   an m=0 necking band of 1–1000 MHz and a 10 ns event-timing bound.
+   An earlier version credited them to S. Lee, A. Serban, IEEE Trans.
+   Plasma Sci. 24 (1996) 1101, which is not on file, so they were never
+   checked against it (attribution removed 2026-10-31).
 5. The reference plan mirrors canonical practice with synthetic
    declarations: a discharge current/voltage event train (event relative against the bank-trigger epoch), a neck-mode probe array (derived cyclic against the facility clock), and the model-owned synthetic oscillator (simulation clock). Every applicable candidate must be
    planned or explicitly deferred with a reason; every channel is

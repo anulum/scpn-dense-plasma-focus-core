@@ -219,8 +219,13 @@ What is exercised, all under the 100 % statement-and-branch coverage gate:
   release is rejected.
 - A reference plan mirroring canonical practice with synthetic
   declarations: discharge event train, neck-mode probe array, synthetic oscillator, each bound to its clock domain.
-- Documented advisory band and timing checks with their sources stated
-  in the code: m=0 necking bands of 1–1000 MHz and ns-scale pinch timing (Lee and Serban 1996); findings are reported, never clamped.
+- Advisory band and timing checks against declared synthetic design
+  bounds: an m=0 necking band of 1–1000 MHz, a 10 ns event-timing bound
+  and a ~100 µs discharge-duration bound. They were earlier credited to Lee
+  and Serban (1996), which is not on file; the filed Lee sources print
+  related scales (pinch durations of 8–14 ns per cm of anode radius) but not
+  these bounds, so the attribution was removed (2026-10-31). Findings are
+  reported, never clamped.
 - Canonical serialisation (sorted keys, NaN/infinity rejected on both
   emit and parse), SHA-256 digest identity, and a strict round-trip
   parser that refuses unknown fields.
