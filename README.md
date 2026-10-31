@@ -22,7 +22,7 @@ configuration of the SCPN Phase Orchestrator reactor registry (coaxial
 plasma-focus pinch).
 
 **Evidence maturity: `computational_prototype`** (per-capability; ADR 0002).
-Four capabilities are implemented: the device configuration model —
+Five capabilities are implemented: the device configuration model —
 validated parameter objects with documented consistency estimates,
 canonical serialisation, and a data-only SPO registry pin
 (evidence: `VALIDATION.md#device-configuration-model`); the

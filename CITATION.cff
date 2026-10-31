@@ -13,9 +13,15 @@ type: software
 title: SCPN Dense Plasma Focus Core
 abstract: >-
   Governed device-family repository for the dense-plasma-focus
-  configuration within the SCPN Reactor Systems Research Group. Currently
-  architecture-only: boundary contracts, CONTROL adapter specification, and
-  validation tooling, with no implemented reactor capability.
+  configuration within the SCPN Reactor Systems Research Group. Evidence
+  maturity computational_prototype: a validated device configuration model,
+  diagnostic and clock semantics aligned with the SCPN Phase Orchestrator
+  observability catalogue, level-0 device physics (closed forms of the Lee
+  model: bank normalisation, axial and radial characteristic quantities,
+  pinch-phase terms, fast-ion-beam chain and neutron estimates, anchored to
+  its table of twelve fitted machines), and tessellated and B-rep device
+  models with STL, glTF and STEP exports. All parameter sets are synthetic;
+  no real machine is described, and the claim inventory is empty.
 authors:
   - family-names: Šotek
     given-names: Miroslav

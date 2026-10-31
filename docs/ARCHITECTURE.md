@@ -15,7 +15,7 @@ SCPN Dense Plasma Focus Core — Architecture
 `SCPN-DENSE-PLASMA-FOCUS-CORE` is the device-family owner for
 dense-plasma-focus systems in the SCPN Reactor Systems Research Group
 portfolio. The
-repository owns four implemented capabilities at
+repository owns five implemented capabilities at
 `computational_prototype` in `src/scpn_dense_plasma_focus_core/`: the device
 configuration model (design record ADR 0002, evidence record
 `VALIDATION.md#device-configuration-model`), the diagnostic and
@@ -92,9 +92,9 @@ SCPN-CONTROL ──admitted ControlAction──► independent machine protectio
 |---|---|
 | `reactor-domain.json` | portable source of project identity and contracts |
 | `studio/portfolio-descriptor.json` | derived Studio descriptor, `not_federated` |
-| `capability-inventory.json` | generated inventory of the four implemented capabilities |
+| `capability-inventory.json` | generated inventory of the five implemented capabilities |
 | `src/scpn_dense_plasma_focus_core/physics/` | level-0 device physics (Lee model closed forms, composed record) |
-| `src/scpn_dense_plasma_focus_core/geometry/` | device geometry and the tier-G1 3D model on the pinned shared kernels |
+| `src/scpn_dense_plasma_focus_core/geometry/` | device geometry, the tier-G1 3D model and the tier-G2 CAD model on the pinned shared kernels |
 | `docs/DEVICE_3D_MODEL_CONTRACT.md` | producer-owned contract of the exported meshes |
 | `reactor-domain.json` → `kernel_library` | exact pin of `scpn-reactor-kernels` (commit object, kernel-inventory digest, consumed kernels; ADR 0006 and ADR 0007) |
 | `rust/` | optional native kernels (`scpn-dense-plasma-focus-rs`, depending on the library's Rust crate at the pinned commit), bit-exact with the Python floor |
