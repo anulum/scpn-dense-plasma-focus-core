@@ -18,6 +18,7 @@ from physics_fixtures import ROWS, AnchorRow, relative_gap
 from scpn_dense_plasma_focus_core.errors import DeviceConfigurationError
 from scpn_dense_plasma_focus_core.physics import (
     BOLTZMANN_J_PER_K,
+    ELEMENTARY_CHARGE_C,
     MU0,
     PASCAL_PER_TORR,
     PROTON_MASS_KG,
@@ -25,6 +26,9 @@ from scpn_dense_plasma_focus_core.physics import (
     fill_state,
 )
 from scpn_dense_plasma_focus_core.physics.bank import BankNormalisation
+from scpn_dense_plasma_focus_core.physics.constants import (
+    MOLAR_GAS_CONSTANT_J_PER_KMOL_K,
+)
 
 
 def normalisation(row: AnchorRow) -> BankNormalisation:
@@ -149,3 +153,23 @@ def test_fill_refuses_non_positive_inputs(field: str) -> None:
     values[field] = -1.0
     with pytest.raises(DeviceConfigurationError, match=field):
         fill_state(**values)
+
+
+#: Avogadro constant, exact by the 2019 SI definition.
+AVOGADRO_PER_MOL = 6.02214076e23
+
+
+def test_constants_are_the_documented_editions() -> None:
+    """Each constant matches the edition its docstring names."""
+    assert BOLTZMANN_J_PER_K == 1.380649e-23
+    assert ELEMENTARY_CHARGE_C == 1.602176634e-19
+    assert math.pi * 4.0e-7 == MU0
+    assert 5.0e-10 < (1.25663706212e-6 - MU0) / 1.25663706212e-6 < 6.0e-10
+    assert -1.5e-10 < (1.25663706127e-6 - MU0) / 1.25663706127e-6 < -1.0e-10
+    assert PROTON_MASS_KG == 1.67262192369e-27
+    proton = (1.67262192595e-27 - PROTON_MASS_KG) / 1.67262192595e-27
+    assert 1.3e-9 < proton < 1.4e-9
+    exact = AVOGADRO_PER_MOL * BOLTZMANN_J_PER_K * 1.0e3
+    assert f"{exact:.10g}" == f"{MOLAR_GAS_CONSTANT_J_PER_KMOL_K:.10g}"
+    gap = (exact - MOLAR_GAS_CONSTANT_J_PER_KMOL_K) / exact
+    assert 1.0e-11 < gap < 3.0e-11

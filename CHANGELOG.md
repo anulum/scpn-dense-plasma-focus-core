@@ -47,6 +47,12 @@ SCPN Dense Plasma Focus Core — CHANGELOG
 
 ### Changed
 
+- The physical constants state their editions correctly: the module text
+  said exact 2019 SI values were used, but only the Boltzmann constant and
+  the elementary charge are exact. `MU0` is the pre-2019 convention
+  `4 pi x 10^-7` H/m, the proton mass is CODATA 2018, and the molar gas
+  constant is `N_A k` rounded to ten significant figures (about `1.8 x 10^-11`
+  relative low). No value changes; a test binds each edition and offset.
 - `scpn_dense_plasma_focus_core.observability` is now a package with one
   module per responsibility — vocabulary, catalogue binding, frames, clocks,
   signals and channels, plan composition, record parsing — behind the

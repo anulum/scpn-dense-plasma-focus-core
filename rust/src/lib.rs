@@ -24,15 +24,17 @@ pub mod physics;
 
 pub use scpn_reactor_kernels_native::numerics::transcendental::NumericsError;
 
-/// Vacuum permeability `mu0 = 4e-7 pi`, evaluated as the Python floor does.
+/// Vacuum permeability `mu0 = 4e-7 pi`, evaluated as the Python floor does:
+/// the pre-2019 SI convention (CODATA 2018 is about 5.4e-10 relative above it).
 pub const MU0: f64 = 4.0e-7 * std::f64::consts::PI;
-/// Proton mass in kilograms.
+/// Proton mass in kilograms (CODATA 2018).
 pub const PROTON_MASS_KG: f64 = 1.672_621_923_69e-27;
 /// Boltzmann constant in joules per kelvin (exact SI 2019 value).
 pub const BOLTZMANN_J_PER_K: f64 = 1.380_649e-23;
 /// Elementary charge in coulombs (exact SI 2019 value).
 pub const ELEMENTARY_CHARGE_C: f64 = 1.602_176_634e-19;
-/// Molar gas constant in J kmol^-1 K^-1.
+/// Molar gas constant in J kmol^-1 K^-1: `N_A k` rounded to ten significant
+/// figures, about 1.8e-11 relative below the exact product.
 pub const MOLAR_GAS_CONSTANT_J_PER_KMOL_K: f64 = 8314.462618;
 /// Pascals per torr as the exact quotient `101325 / 760`.
 pub const PASCAL_PER_TORR: f64 = 101_325.0 / 760.0;
