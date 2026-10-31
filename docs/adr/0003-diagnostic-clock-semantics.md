@@ -29,7 +29,8 @@ bind. Three candidates apply to the configuration this repository owns: `self_ma
 ## Decision
 
 1. The capability `diagnostic_clock_semantics` is implemented as a
-   declaration model (`src/scpn_dense_plasma_focus_core/observability.py`): frozen
+   declaration model (`src/scpn_dense_plasma_focus_core/observability/`,
+   one module per responsibility behind the package facade): frozen
    `ClockModel`, `DiagnosticChannelPlan`, `DeferredCandidate`, and
    `DiagnosticPlan` objects with fail-closed invariants, an
    advisory-only consistency report, canonical serialisation with

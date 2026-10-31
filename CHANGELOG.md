@@ -47,6 +47,11 @@ SCPN Dense Plasma Focus Core — CHANGELOG
 
 ### Changed
 
+- `scpn_dense_plasma_focus_core.observability` is now a package with one
+  module per responsibility — vocabulary, catalogue binding, frames, clocks,
+  signals and channels, plan composition, record parsing — behind the
+  unchanged public import path. The 34 public names, canonical plan bytes and
+  refusal behaviour are unchanged.
 - The documentation gate reads only files git would publish, so a
   git-ignored private tree is never link-checked. Hooks without their own
   stage list run before a commit and before a push only; commit-msg runs the
