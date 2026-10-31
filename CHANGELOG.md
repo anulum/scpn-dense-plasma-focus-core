@@ -25,6 +25,10 @@ SCPN Dense Plasma Focus Core — CHANGELOG
 
 ### Changed
 
+- The documentation gate reads only files git would publish, so a
+  git-ignored private tree is never link-checked. Hooks without their own
+  stage list run before a commit and before a push only; commit-msg runs the
+  trailer guard alone.
 - Local and hosted gates check the same cohorts: `conftest.py` joins the
   typed cohort everywhere, VALIDATION names the full typed cohort (it
   omitted `benchmarks/`, which CI already checks), and `make validate` and
