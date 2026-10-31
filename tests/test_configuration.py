@@ -88,6 +88,7 @@ def test_consistency_report_clean_and_findings() -> None:
     findings = weak.consistency_report()
     assert len(findings) == 1
     assert "deuterium window" in findings[0].message
+    assert "declared deuterium window" in findings[0].message
     non_deuterium = synthetic_configuration(peak_current_ma=0.1, deuterium_fill=False)
     assert non_deuterium.consistency_report() == ()
 

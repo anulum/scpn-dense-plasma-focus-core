@@ -37,12 +37,13 @@ follow the family pilot.
 3. Hard invariant: the cathode radius is strictly larger than the anode
    radius — the coaxial-gun geometry of the Mather/Filippov family.
 4. Derived quantity with citation: the drive parameter
-   ``S = I_peak / (a sqrt(p))`` in kA cm^-1 Torr^-1/2 (S. Lee,
-   A. Serban, IEEE Trans. Plasma Sci. 24 (1996) 1101). Advisory
-   finding, reported by `consistency_report()` and never clamped: for a
-   deuterium fill, a drive parameter outside the documented
-   ``[66, 108]`` window of optimised machines; the window is not
-   applied to other fill gases.
+   ``S = I_peak / (a sqrt(p))`` in kA cm^-1 Torr^-1/2 (named after
+   S. Lee, A. Serban, IEEE Trans. Plasma Sci. 24 (1996) 1101, not on
+   file; printed as the speed or drive factor in the filed S. Lee, ICTP
+   2168-10 (2012), PDF p. 5). Advisory finding, reported by
+   `consistency_report()` and never clamped: for a deuterium fill, a
+   drive parameter outside the declared ``[66, 108]`` window; the window
+   is not applied to other fill gases.
 5. Repository-level `evidence_maturity` = the highest state claimed by
    any capability entry; per-capability states are the authoritative
    claim surface.
@@ -61,3 +62,14 @@ follow the family pilot.
   thermal/beam separation, safety envelope) build on these types;
   maturity advances per capability only with the evidence the family
   standard requires.
+
+## Amendment 2026-10-31
+
+The drive parameter and its deuterium window were credited to Lee &
+Serban (1996), which is not on file, and the window was called the
+documented window of optimised machines. The filed Lee (2012) note,
+PDF p. 5 (printed p. 3), prints the speed or drive factor of three
+deuterium machines (PF1000, UNU ICTP, PF-400J) as 82 to 100 (kA/cm)
+torr^-0.5, practically constant around 90. The ``[66, 108]`` window
+contains that range but is not printed in a filed source, so it is named
+declared. No value or check changed.

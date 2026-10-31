@@ -10,9 +10,13 @@
 
 A :class:`DeviceConfiguration` composes a validated electrode set and
 bank/fill declaration under the single registry identifier this
-repository owns. The coaxial ordering is hard; for deuterium fills the
-Lee-Serban drive parameter outside the documented window of optimised
-machines is flagged (Lee & Serban, IEEE TPS 24 (1996) 1101).
+repository owns. The coaxial ordering is hard; for deuterium fills a
+Lee-Serban drive parameter outside the declared window ``[66, 108]`` is
+flagged. The filed S. Lee, ICTP 2168-10 (2012), PDF p. 5 (printed p. 3),
+prints the speed or drive factor ``(I_peak / a) / P0^0.5`` of three
+deuterium machines as 82 to 100 (kA/cm) torr^-0.5, practically constant
+around 90; the window is a declared modelling choice that contains that
+range. Lee & Serban, IEEE TPS 24 (1996) 1101, is not on file.
 Serialisation is canonical (sorted keys, no NaN or infinity accepted
 anywhere) and the SHA-256 digest of those bytes identifies the exact
 parameter set. The registry binding is a data pin only — this package
@@ -146,8 +150,8 @@ class DeviceConfiguration:
         Returns
         -------
         tuple of ConsistencyFinding
-            Advisory findings from the documented estimates; empty when
-            a deuterium drive parameter sits in the documented window,
+            Advisory findings from the declared estimates; empty when
+            a deuterium drive parameter sits in the declared window,
             and always empty for non-deuterium fills. Findings are
             advisory instruments, not machine claims.
         """
@@ -161,7 +165,7 @@ class DeviceConfiguration:
                         field="bank.peak_current_ma",
                         message=(
                             f"drive parameter {drive:.1f} kA/cm/sqrt(Torr) "
-                            f"is outside the documented deuterium window "
+                            f"is outside the declared deuterium window "
                             f"[{low:.0f}, {high:.0f}]"
                         ),
                     )

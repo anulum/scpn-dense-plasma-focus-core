@@ -11,7 +11,7 @@
 Every image is original generated artwork derived from this repository's
 own domain surface — the coaxial electrode set with its sweeping
 current sheath and focus, the three declared discharge phases, and the
-Lee-Serban drive-parameter window the configuration model checks. The
+declared drive-parameter window the configuration model checks. The
 right-hand text panel states only facts backed by the repository
 itself.
 
@@ -21,8 +21,8 @@ Outputs (written next to this script):
   sheath and the dense focus at the anode tip (used by ``README.md``).
 - ``repo_header_discharge_phases.png`` — breakdown, axial rundown and
   radial focus as a sequence.
-- ``repo_header_drive_window.png`` — the drive-parameter window of
-  optimised machines with flagged outliers.
+- ``repo_header_drive_window.png`` — the declared drive-parameter window
+  with flagged outliers.
 
 Generation-time tooling only: requires ``numpy`` and ``matplotlib``,
 which are deliberately not part of the pinned development lock. Run as
@@ -52,8 +52,8 @@ WIDTH_IN, HEIGHT_IN, DPI = 12.8, 6.4, 100
 TITLE_METRICS: list[tuple[str, str]] = [
     ("Device Configuration", "dense_plasma_focus · coaxial pinch"),
     ("Hard Invariant", "coaxial electrode ordering"),
-    ("Drive Parameter", "Lee-Serban window flagged (D fills)"),
-    ("Reference", "Lee-Serban, IEEE TPS 24 (1996) 1101"),
+    ("Drive Parameter", "declared window flagged (D fills)"),
+    ("Reference", "Lee, ICTP 2168-10 (2012)"),
     ("Plan Envelope", "v1.1.0 · synthetic · review-only"),
     ("Quality Gates", "100% branch cov · mypy --strict"),
 ]
@@ -491,7 +491,7 @@ def generate_drive_window() -> None:
     ax.text(
         5.0,
         (y_low + y_high) / 2,
-        "documented window of optimised machines",
+        "declared window · Lee 2012 prints 82-100",
         color=GREEN,
         fontsize=8.5,
         fontfamily="monospace",
@@ -547,7 +547,7 @@ def generate_drive_window() -> None:
     ax.text(
         5.0,
         0.75,
-        "deuterium-fill drive parameter checked · Lee-Serban, IEEE TPS 24 (1996) 1101",
+        "deuterium-fill drive parameter checked · Lee, ICTP 2168-10 (2012)",
         color="#445566",
         fontsize=8,
         fontfamily="monospace",

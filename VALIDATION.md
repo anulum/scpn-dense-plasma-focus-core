@@ -77,11 +77,13 @@ What is exercised, all under the 100 % statement-and-branch coverage gate:
   extents, and an anode at or beyond the cathode radius (the hard
   coaxial-gun invariant of the Mather/Filippov family) — every rejection
   branch is tested.
-- The Lee-Serban drive parameter `S = I_peak / (a sqrt(p))`
-  (Lee & Serban, IEEE Trans. Plasma Sci. 24 (1996) 1101) as a
-  documented derived quantity, with an advisory finding outside the
-  documented deuterium window `[66, 108]` kA cm^-1 Torr^-1/2 (not
-  applied to other fill gases), reported and never clamped.
+- The Lee-Serban drive parameter `S = I_peak / (a sqrt(p))` (named
+  after Lee & Serban, IEEE Trans. Plasma Sci. 24 (1996) 1101, not on
+  file; printed as the speed or drive factor in the filed Lee, ICTP
+  2168-10 (2012), PDF p. 5, with 82 to 100 for three deuterium machines)
+  as a derived quantity, with an advisory finding outside the declared
+  deuterium window `[66, 108]` kA cm^-1 Torr^-1/2 (not applied to other
+  fill gases), reported and never clamped.
 - Canonical serialisation (sorted keys, NaN/infinity rejected on both
   emit and parse), SHA-256 digest identity, and a strict round-trip
   parser that refuses unknown fields.

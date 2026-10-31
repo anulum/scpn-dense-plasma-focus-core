@@ -10,8 +10,11 @@
 
 The derived quantity implements one standard result and nothing more:
 the drive parameter ``S = I_peak / (a sqrt(p))`` in
-kA cm^-1 Torr^-1/2 (S. Lee, A. Serban, IEEE Trans. Plasma Sci. 24
-(1996) 1101). It is a rough consistency instrument with documented
+kA cm^-1 Torr^-1/2, the speed or drive factor ``(I_peak / a) / P0^0.5``
+printed in the filed S. Lee, ICTP 2168-10 (2012), PDF p. 5 (printed
+p. 3); it is named after S. Lee and A. Serban, IEEE Trans. Plasma Sci.
+24 (1996) 1101, which is not on file. It is a rough consistency
+instrument with documented
 applicability bounds; no claim about any real machine follows from it.
 """
 
@@ -174,7 +177,7 @@ class BankAndFill:
         -------
         float
             ``S = I_peak / (a sqrt(p))`` in kA cm^-1 Torr^-1/2
-            (Lee & Serban, IEEE TPS 24 (1996) 1101).
+            (Lee, ICTP 2168-10 (2012), PDF p. 5).
         """
         current_ka = self.peak_current_ma * 1.0e3
         anode_cm = electrodes.anode_radius_m * 1.0e2
