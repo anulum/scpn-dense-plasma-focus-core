@@ -425,7 +425,7 @@ pub fn pinch_radiation(
     })
 }
 
-/// Fast-ion-beam chain (TECDOC-1829, eqs. 5–6 and items (a)–(k)).
+/// Fast-ion-beam chain (TECDOC-1829, eqs. 5–6 and items (a)–(j)).
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct FastIonBeam {
     /// `v_b` of eq. (5).

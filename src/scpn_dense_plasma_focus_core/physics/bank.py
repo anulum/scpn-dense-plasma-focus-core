@@ -15,7 +15,7 @@ with ``La = (mu0 / 2 pi) ln(c) z0`` the inductance of the full axial
 phase, and ``delta = r0 / Z0`` (S. Lee, J. Fusion Energ. 33 (2014)
 319–335, eqs. 4–6 and 9 and the text before them). The quarter period
 ``(pi / 2) t0`` of the undamped ``L0 C0`` circuit is the rise time the
-same author tabulates for twelve machines (IAEA-TECDOC-1829, Table 1),
+same author tabulates for twelve machines (IAEA-TECDOC-1829, Table 1, p. 87),
 which is the anchor of this module. The fill state is the ideal-gas
 density of the declared molecular mass at the declared temperature; the
 review writes the molecule number density as ``6e26 rho0 / M`` (eq. 43),

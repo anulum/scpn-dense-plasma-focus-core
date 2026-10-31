@@ -11,15 +11,17 @@
 The extended Lee model derives the beam ion flux from the fraction ``fe``
 of the pinch inductive energy converted into beam kinetic energy and the
 diode voltage ``U`` (S. H. Saw and S. Lee in IAEA-TECDOC-1829 (2017),
-pp. 84–86): the beam speed ``v_b = [2 e Z_eff U / (M m_p)]^(1/2)``
+pp. 84–86, Table 1 on p. 87): the beam speed ``v_b = [2 e Z_eff U / (M m_p)]^(1/2)``
 (eq. 5) and the flux
 ``J_b = 2.75e15 fe / (M Z_eff)^(1/2) ln(b / rp) / rp^2 I_pinch^2 / U^(1/2)``
 (eq. 6, the printed constant being the source's rounding of
 ``mu0 / (2.83 pi^2 (e m_p)^(1/2))``, kept as printed so the tabulated
 values are reproduced). The derived quantities follow the source's list
-(a)–(k): energy flux ``J_b Z_eff e U``, power flow, current density,
+(a)–(j): energy flux ``J_b Z_eff e U``, power flow, current density,
 ion current, ions per second, fluence ``J_b tau``, energy fluence, ions
 in the beam, beam energy and the damage factor ``J_b Z_eff e U tau^(1/2)``.
+Item (k), the energy of the fast plasma stream, needs the work of the
+magnetic piston over the whole radial phase and is not computed here.
 Anchors: the PF1000, NX3 and INTI columns of the source's Table 1 within
 3 % and the PF400J column within 12 % (its two-digit pinch radius enters
 as ``rp^-2``). No value describes any machine's behaviour: the anchors
@@ -149,7 +151,7 @@ def fast_ion_beam(
     Returns
     -------
     FastIonBeam
-        Speed, flux and the derived quantities (a)–(k).
+        Speed, flux and the derived quantities (a)–(j).
 
     Raises
     ------

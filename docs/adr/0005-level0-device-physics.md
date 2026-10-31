@@ -46,9 +46,9 @@ geometry).
    eq. 1 at zero acceleration), the radial characteristic quantities, slug
    relations and rule-of-thumb geometry (eqs. 14, 15, 24–28, 32, 34; ICTP
    Table 3), the pinch-phase closed forms (eqs. 39–48), the fast-ion-beam
-   chain (TECDOC eqs. 5–6 and items (a)–(k)), and the neutron estimates
-   (Lee eq. 50 with the TECDOC constant, the empirical scaling law with its
-   calibration point). A composed `Level0PhysicsRecord` serialises
+   chain (TECDOC eqs. 5–6 and items (a)–(j); item (k) is not computed),
+   and the neutron estimates (Lee eq. 50 with the TECDOC constant, the
+   empirical scaling law with its calibration point). A composed `Level0PhysicsRecord` serialises
    canonically with a SHA-256 digest and carries fixed non-claims.
 3. Inputs the configuration does not carry are declared explicitly and
    validated fail-closed: `ModelInputs` (bank circuit values, fill gas and

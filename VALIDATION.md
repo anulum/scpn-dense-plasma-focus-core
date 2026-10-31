@@ -103,7 +103,7 @@ Evidence record of the `level0_device_physics` capability
 Sources: S. Lee, "Plasma Focus Radiative Model: Review of the Lee Model
 Code", J. Fusion Energ. 33 (2014) 319–335; S. H. Saw and S. Lee,
 "Investigation of Intense Fusion Pulses", in IAEA-TECDOC-1829 (2017)
-pp. 84–86 (Table 1: twelve machines fitted with the code); S. Lee, "The
+pp. 84–86 (Table 1 on p. 87: twelve machines fitted with the code); S. Lee, "The
 Plasma Focus: Scaling Properties to Scaling Laws", ICTP 2168-10 (2012).
 
 What is exercised, all under the 100 % statement-and-branch coverage gate
@@ -142,7 +142,8 @@ What is exercised, all under the 100 % statement-and-branch coverage gate
   tabulated `Tpinch` and `ni` are outputs of the integrated code and are
   not reproduced by eqs. (41) and (43) at the tabulated inputs (factors of
   about 3 and 5 in a hand check), which the record states.
-- **Fast-ion-beam chain** (`beam.py`; TECDOC eqs. 5–6, items (a)–(k)):
+- **Fast-ion-beam chain** (`beam.py`; TECDOC eqs. 5–6, items (a)–(j); item
+  (k), the fast-plasma-stream energy, is not computed):
   flux, beam speed, energy flux, power flow, ion current, fluence, energy
   fluence, ions, beam energy and damage factor against the PF1000, NX3 and
   INTI columns within 3 % and the PF400J column within 12 % (its two-digit

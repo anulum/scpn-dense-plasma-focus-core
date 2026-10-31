@@ -47,6 +47,12 @@ SCPN Dense Plasma Focus Core — CHANGELOG
 
 ### Changed
 
+- The fast-ion-beam chain names the items it computes, (a)–(j) of the
+  TECDOC list; it said (a)–(k), but item (k), the fast-plasma-stream energy,
+  is not computed. The pinch module records why its self-absorption factor
+  reads the review's eq. 47 as `1 + 1e-14 N_i Z / T^3.5` although the
+  equation is printed with the whole numerator over `T^3.5`, and the
+  machine table is cited at its page, p. 87. No value changes.
 - The physical constants state their editions correctly: the module text
   said exact 2019 SI values were used, but only the Boltzmann constant and
   the elementary charge are exact. `MU0` is the pre-2019 convention

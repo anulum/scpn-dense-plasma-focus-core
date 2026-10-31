@@ -21,7 +21,12 @@ T^(1/2) Z^3`` (eq. 42), the line loss ``-4.6e-31 N_i^2 Z Z_n^4 pi rp^2 zf
 Z_n^(1/2) N_i / (Z T^1.5)`` with ``T`` in eV (eq. 46), the self-absorption
 factor ``A = A2^(1 + M)``, ``A1 = 1 + 1e-14 N_i Z / T^3.5``, ``A2 = 1 / A1``
 (eq. 47, ``T`` in eV as for eq. 46; the review states the unit once for
-both), and the surface-emission line loss ``-4.62e-16 Z^(1/2) Z_n^3.5 rp
+both). The review prints ``A1 = ((1 + 1e-14 N_i Z) / (T^3.5))``; taken
+literally that gives ``A1 = T^-3.5`` with no plasma at all and an
+absorption factor above one, against the review's own statement on the
+same page that the factor falls from 1 (no absorption) towards ``1/e``.
+The form implemented here is the only reading consistent with that
+statement. The surface-emission line loss ``-4.62e-16 Z^(1/2) Z_n^3.5 rp
 zf T^4`` that replaces the volumetric term once ``A`` falls to ``1/e``
 (eq. 48 and the text after it); an absorption factor below the smallest
 normal double is reported as exactly zero (fully absorbed) instead of
